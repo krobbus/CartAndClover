@@ -27,21 +27,20 @@ export const getMyProducts = async (req, res, next) => {
 };
 
 export const createProduct = asyncHandler(async (req, res) => {
-    const { name, description, price, category, imageUrl, stock } = req.body;
+    const { name, description, price, category, stock } = req.body;
 
     const product = new Product({
         name,
         description,
         price,
         category,
-        imageUrl,
         stock,
         createdBy: req.user._id
     });
 
     const createdProduct = await product.save();
     
-    res.status(201).json(product);
+    res.status(201).json(createdProduct);
 });
 
 export const updateProduct = asyncHandler(async (req, res) => {
