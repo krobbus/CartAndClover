@@ -23,11 +23,6 @@ const productSchema = new mongoose.Schema({
         required: true,
         enum: ['Clothing', 'Electronics', 'Food', 'Home & Living', 'Accessories', 'General']
     },
-    imageUrl: {
-        type: String,
-        required: true,
-        default: 'https://via.placeholder.com/150'
-    },
     stock: {
         type: Number,
         required: true,
