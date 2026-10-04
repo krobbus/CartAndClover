@@ -20,12 +20,18 @@ const orderSchema = new mongoose.Schema({
         }
     ],
     shippingAddress: {
-        address: { type: String, required: true },
+        street: { type: String, required: true, set: capitalizeFirstLetter  },
+        province: { type: String, required: true, set: capitalizeFirstLetter },
         city: { type: String, required: true, set: capitalizeFirstLetter },
         postalCode: { type: String, required: true },
-        country: { type: String, required: true, set: capitalizeFirstLetter }
+        phone: { type: Number, required: true }
     },
-    totalPrice: {
+    paymentMethod: {
+        type: String,
+        enum: ['Cash on Delivery', 'Credit/Debit Card', 'E-Wallet (GCash/Maya)'],
+        default: 'Cash on Delivery'
+    },
+    totalAmount: {
         type: Number,
         required: true,
         default: 0.0

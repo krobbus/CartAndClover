@@ -26,7 +26,7 @@ export const getOrderById = asyncHandler(async (req, res) => {
 });
 
 export const createOrder = asyncHandler(async (req, res) => {
-    const { user, orderItems, shippingAddress, totalPrice } = req.body;
+    const { user, orderItems, shippingAddress, paymentMethod, totalAmount} = req.body;
     const userId = req.user?._id || user;
     
     if (!orderItems || orderItems.length === 0) {
@@ -38,7 +38,8 @@ export const createOrder = asyncHandler(async (req, res) => {
         user: userId,
         orderItems,
         shippingAddress,
-        totalPrice
+        paymentMethod,
+        totalAmount
     });
 
     const createdOrder = await order.save();
