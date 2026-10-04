@@ -40,19 +40,6 @@ export const createUser = asyncHandler(async (req, res) => {
     res.status(201).json(userResponse);
 });
 
-export const updateUser = asyncHandler(async (req, res) => {
-    const updatedUser = await User.findByIdAndUpdate(
-        req.params.id, req.body, { new: true, runValidators: true }
-    ).select('-passwordHash');
-
-    if (!updatedUser) {
-        res.status(404)
-        throw new Error('User not found');
-    }
-
-    res.status(200).json(updatedUser);
-});
-
 export const deleteUser = asyncHandler(async (req, res) => {
     const user = await User.findByIdAndDelete(req.params.id);
 

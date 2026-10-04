@@ -3,7 +3,6 @@ import {
     getAllUsers, 
     getUserById, 
     createUser, 
-    updateUser, 
     deleteUser 
 } from '../controllers/userController.js';
 import verifyToken from '../middleware/authMiddleware.js';
@@ -18,7 +17,6 @@ router.route('/')
 
 router.route('/:id')
     .get(getUserById)
-    .patch(updateUser)
     .delete(deleteUser);
 
 export default router;
