@@ -47,15 +47,43 @@ export const createOrder = asyncHandler(async (req, res) => {
 });
 
 export const updateOrder = asyncHandler(async (req, res) => {
-    const updatedOrder = await Order.findByIdAndUpdate(
-        req.params.id, req.body, { new: true, runValidators: true }
-    );
+    const order = await Order.findById(req.params.id);
 
-    if (!updatedOrder) {
+    if (!order) {
         res.status(404);
         throw new Error('Order not found');
     }
 
+    if (req.body.shippingAddress) {
+        order.shippingAddress = {
+            ...(order.shippingAddress?.toObject?.() || order.shippingAddress),
+            ...req.body.shippingAddress
+        };
+    }
+
+    if (req.body.paymentMethod) {
+        order.paymentMethod = req.body.paymentMethod;
+    }
+
+    if (req.body.status) {
+        order.status = req.body.status;
+    }
+
+    if (typeof req.body.isPaid !== 'undefined') {
+        const newIsPaid = Boolean(req.body.isPaid);
+
+        if (order.isPaid && !newIsPaid) {
+            res.status(400);
+            throw new Error('Payment status cannot be changed back to Unpaid once marked as Paid.');
+        }
+
+        order.isPaid = newIsPaid;
+        if (order.isPaid && !order.paidAt) {
+            order.paidAt = new Date();
+        }
+    }
+
+    const updatedOrder = await order.save();
     res.status(200).json(updatedOrder);
 });
 
