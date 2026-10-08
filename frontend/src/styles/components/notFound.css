@@ -1,0 +1,63 @@
+.notFoundPage{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+    padding: 4rem;
+
+    .notFoundCard{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        border: 2px solid var(--secondary-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 2rem auto;
+        background-color: var(--main-color);
+
+        .title{
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: var(--heading-font);
+            text-align: center;
+            color: var(--tertiary-color);
+        }
+
+        .body{
+            font-size: 1rem;
+            font-family: var(--body-font);
+            color: var(--dark-color);
+            text-align: center;
+        }
+
+        .action{
+            display: inline-block;
+            font-size: 1rem;
+            font-family: var(--body-font);
+            font-weight: 600;
+            color: var(--light-color);
+            background-color: var(--secondary-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.2s ease-in-out;
+
+            &:hover{
+                color: var(--tertiary-color);
+                background-color: var(--light-color);
+            }
+        }
+    }
+}
+
+@media (max-width: 800px){
+    .notFoundPage{
+        .notFoundCard{
+            .title{ font-size: 1.6rem; }
+            .body, .action{ font-size: 0.8rem; }
+        }
+    }
+}

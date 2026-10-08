@@ -1,0 +1,256 @@
+.productsContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    height: 100%;
+    min-height: 100dvh;
+    padding: 4rem;
+
+    header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 2rem;
+
+        h1{
+            font-size: 2rem;
+            color: var(--tertiary-color);
+            font-family: var(--heading-font);
+        }
+
+        p{
+            font-size: 1rem;
+            color: var(--dark-color);
+            font-family: var(--body-font);
+            letter-spacing: 1px;
+            padding-left: 0.5rem;
+        }
+
+        .addBtn{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            font-family: var(--body-font);
+            font-weight: 600;
+            color: var(--light-color);
+            white-space: nowrap;
+            background-color: var(--secondary-color);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.2s ease-in-out;
+
+            &:hover{
+                color: var(--tertiary-color);
+                background-color: var(--main-color);
+            }
+        }
+    }
+
+    .filterBar{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .searchInput{
+            flex: 1;
+            font-size: 1rem;
+            font-family: var(--body-font);
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 0.8rem 2rem;
+        }
+
+        .categoryPills{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 0.5rem;
+
+            .pill{
+                background-color: transparent;
+                border: 2px solid var(--secondary-color);
+                border-radius: 10px;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+                font-weight: 700;
+                font-family: var(--body-font);
+                color: var(--secondary-color);
+                cursor: pointer;
+                transition: 0.2s ease-in-out;
+
+                &:hover, &.active{
+                    background-color: var(--secondary-color);
+                    color: var(--light-color);
+                }
+            }
+        }
+    }
+
+    .productGrid{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+        gap: 1rem;
+        margin: 2rem 0;
+
+        .productCard{
+            background-color: var(--secondary-color);
+            padding: 1rem;
+            border-radius: 20px;
+            
+            .productHeader{
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 1rem;
+                
+                h3{
+                    font-size: 1rem;
+                    font-family: var(--body-font);
+                    color: var(--dark-color);
+                }
+
+                .categoryTag{
+                    font-size: 1rem;
+                    font-family: var(--body-font);
+                    color: #444;
+                }
+            }
+
+            .productImageWrapper{
+                position: relative;
+                aspect-ratio: 1/1;
+                object-fit: cover;
+
+                .price{
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    font-family: var(--body-font);
+                    color: var(--light-color);
+                    background-color: var(--secondary-color);
+                    border-bottom-left-radius: 20px;
+                    padding-left: 1rem;
+                    padding-bottom: 0.5rem;
+                }
+
+                img{
+                    border-radius: 20px;
+                    height: 100%;
+                    width: 100%;
+                }
+
+                .stockStatus{
+                    position: absolute;
+                    bottom: 10px;
+                    left: 10px;
+                    right: 10px;
+                    background-color: var(--secondary-color);
+                    color: var(--light-color);
+                    font-family: var(--body-font);
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    text-align: center;
+                    padding: 0.2rem 2rem;
+                    border-radius: 40px;
+                }
+            }
+
+            .cardActions{
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+                margin-top: 1rem;
+
+                button, a {
+                    padding: 0.6rem 1rem;
+                    font-family: var(--body-font);
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    border-radius: 10px;
+                    text-decoration: none;
+                    text-align: center;
+                    cursor: pointer;
+                    border: none;
+                    transition: all 0.2s ease;
+                }
+
+                .viewBtn {
+                    background-color: var(--tertiary-color);
+                    color: var(--light-color);
+
+                    &:hover{ 
+                        background-color: var(--main-color);
+                        color: var(--dark-color);
+                    }
+                }
+
+                .editBtn{
+                    background-color: var(--light-color);
+                    border: none;
+                    color: var(--tertiary-color);
+
+                    &:hover {
+                        background-color: var(--tertiary-color);
+                        color: var(--light-color);
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 800px){
+    .productsContainer{
+        padding: 2rem;
+
+        header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 2rem;
+
+            h1{ font-size: 1.8rem; }
+            p{ 
+                max-width: 200px;
+                font-size: 0.8rem; 
+            }
+
+            .addBtn{ font-size: 0.6rem; }
+        }
+
+        .filterBar{         
+            gap: 1rem;
+
+            .searchInput{ padding: 0.6rem 1rem; }
+
+            .categoryPills {
+                justify-content: center;
+
+                .pill{
+                    padding: 0.2rem 0.8rem;
+                    font-size: 0.8rem;
+                }
+            }
+        }
+
+        .productGrid{
+            grid-template-columns: repeat(2, 1fr);
+
+            .productCard{                    
+                .productHeader h3, .productHeader .categoryTag{ font-size: 0.8rem; }
+                .productImageWrapper .price{ font-size: 0.75rem; }
+                .productImageWrapper .stockStatus, .cardActions button, .cardActions a{ font-size: 0.6rem; }
+
+                .cardActions{
+                    flex-direction: column;
+                }
+            }
+        }
+    }
+}

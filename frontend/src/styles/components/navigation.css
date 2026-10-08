@@ -1,0 +1,204 @@
+.navigationContainer{
+    position: relative;
+    width: 100%;
+
+    .navBar{
+        position: sticky;
+        top: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: linear-gradient(to right, var(--main-color), var(--secondary-color));
+        z-index: 99;
+
+        .brand{
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--heading-font);
+            white-space: nowrap;
+            text-decoration: none;
+            color: var(--dark-color);
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
+
+            &:hover{ color: var(--light-color); }
+        }
+
+        .navLinks{
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%;
+
+            a{
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 1rem;
+                font-weight: 700;
+                font-family: var(--body-font);
+                color: var(--dark-color);
+                text-decoration: none;
+                cursor: pointer;
+                transition: 0.2s ease-in-out;
+
+                &:hover{ color: var(--light-color); }
+            }
+        }
+
+        .authNavLinks{
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+
+            a{
+                font-size: 1rem;
+                font-weight: 700;
+                font-family: var(--body-font);
+                color: var(--dark-color);
+                text-decoration: none;
+                cursor: pointer;
+                transition: 0.2s ease-in-out;
+
+                &:hover{ color: var(--light-color); }
+            }
+        }
+
+        .userLogContainer{
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+
+            .userProfile{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+
+                .userAvatar{
+                    display: grid;
+                    place-items: center;
+                    width: 2.25rem;
+                    height: 2.25rem;
+                    border-radius: 50%;
+                    background: var(--tertiary-color);
+                    color: var(--light-color);
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    letter-spacing: 1px;
+                    user-select: none;
+                }
+
+                .userDetails{
+                    display: flex;
+                    flex-direction: column;
+                    font-family: var(--body-font);
+                    font-size: 0.8rem;
+                    white-space: nowrap;
+
+                    .role{ color: #444; }
+                }
+            }
+
+            .logoutBtn{
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.8rem;
+                font-family: var(--body-font);
+                font-weight: 700;
+                color: var(--light-color);
+                background-color: var(--tertiary-color);
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                text-decoration: none;
+                transition: 0.2s ease-in-out;
+
+                &:hover{
+                    color: var(--tertiary-color);
+                    background-color: var(--light-color);
+                }
+            }
+        }
+
+        .menuToggleBtn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+    }
+}
+
+@media (max-width: 1000px){
+    .navigationContainer{
+        .navBar {
+            .brand{ font-size: 1.2rem; }
+
+            .navLinks {
+                flex-direction: column;
+                align-items: center;
+                font-size: 1.8rem;
+                gap: 2.5rem;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100dvw;
+                height: 100dvh;
+                background-color: var(--main-color);
+                margin-left: 0;
+                padding: 2rem;
+                z-index: 1000;
+                opacity: 0;
+                pointer-events: none;
+                transform: translateY(-10px);
+                transition: opacity 0.3s ease, transform 0.3s ease;
+
+                &.open {
+                    opacity: 1;
+                    pointer-events: auto;
+                    transform: translateY(0);
+                }
+            }
+
+            .menuToggleBtn { display: block; }
+        }
+    }
+}
+
+@media (max-width: 800px){
+    .navigationContainer{
+        .navBar{
+            padding: 0.8rem 1rem;
+
+            .brand{ font-size: 1rem; }
+
+            .authNavLinks{
+                gap: 1rem;
+                a{ font-size: 0.8rem; }
+            }
+
+            .userLogContainer{
+                gap: 1rem;
+
+                .userProfile .userAvatar{
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    border-radius: 50%;
+                    font-size: 0.6rem;
+                }
+
+                .userProfile .userDetails, .logoutBtn{ font-size: 0.6rem; }
+            }
+
+            .menuToggleBtn { font-size: 1rem }
+        }
+    }
+}

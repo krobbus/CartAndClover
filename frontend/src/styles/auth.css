@@ -1,0 +1,135 @@
+.authCard{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    height: 100%;
+    min-height: 100dvh;
+    padding: 4rem;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../assets/headerBanner.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    
+    .backLink{
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        font-family: var(--body-font);
+        color: var(--light-color);
+
+        &:hover{ color: var(--secondary-color); }
+    }
+
+    form{
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        gap: 2rem;
+        padding: 4rem;
+        padding-bottom: 2rem;
+        background: linear-gradient(to top, var(--tertiary-color), var(--main-color));
+        border-radius: 20px;
+
+        h2{
+            font-family: var(--heading-font);
+            font-weight: 700;
+            font-size: 2rem;
+            text-align: center;
+        }
+        
+        .inputWrapper{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+
+            .span{ grid-column: span 2; }
+
+            label{
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                font-size: 1rem;
+                font-family: var(--body-font);
+
+                input, select{
+                    font-size: 1rem;
+                    font-family: var(--body-font);
+                    border: none;
+                    outline: none;
+                    border-radius: 10px;
+                    padding: 1rem 1.5rem;
+                    width: 100%;
+                }
+            }
+        }
+
+        .loginBtn, .registerBtn{
+            font-size: 1rem;
+            font-family: var(--body-font);
+            padding: 0.8rem 2rem;
+            margin: 0 auto;
+            min-width: 10rem;
+            cursor: pointer;
+            border-radius: 20px;
+            border: 4px solid var(--main-color);
+            background-color: var(--secondary-color);
+            color: var(--light-color);
+            transition: 0.2s ease-in-out;
+
+            &:hover{ 
+                background-color: var(--main-color);
+                color: var(--dark-color);
+            }
+        }
+
+        .switchLink{
+            display: flex;
+            gap: 0.5rem;
+            font-family: var(--body-font);
+            color: var(--dark-color);
+            margin: 0 auto;
+
+            a{ 
+                color:  var(--dark-color);
+                transition: 0.2s ease-in-out;
+                &:hover{ color: var(--light-color); }
+            }
+        }
+    }
+}
+
+@media (max-width: 800px){
+    .authCard{
+        padding: 2rem;
+
+        .backLink{ font-size: 0.8rem; }
+
+        form{
+            padding: 2.5rem;
+            padding-bottom: 1rem;
+
+            h2{ font-size: 1.6rem; }
+            .inputWrapper{
+                label{
+                    grid-column: span 2;
+                    font-size: 0.8rem;
+                    max-width: 300px;
+
+                    input, select{ 
+                        font-size: 0.8rem;
+                        padding: 1rem; 
+                    }
+                }
+            }
+
+            .loginBtn, .registerBtn{
+                font-size: 0.8rem;
+                padding: 0.6rem 2rem;
+            }
+
+            .switchLink { font-size: 0.8rem; }
+        }
+    }
+}

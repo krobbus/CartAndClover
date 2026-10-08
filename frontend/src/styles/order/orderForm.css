@@ -1,0 +1,373 @@
+.orderFormContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    height: 100%;
+    min-height: 100dvh;
+    padding: 4rem;
+
+    .backBtn{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        font-family: var(--body-font);
+        font-size: 1rem;
+        color: var(--dark-color);
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        margin-bottom: 2rem;
+
+        &:hover{ color: var(--secondary-color); }
+    }
+
+    header{
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 2rem;
+
+        h2{
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            font-family: var(--heading-font);
+        }
+
+        p{
+            font-size: 1rem;
+            color: var(--dark-color);
+            font-family: var(--body-font);
+            letter-spacing: 1px;
+            padding-left: 0.5rem;
+        }
+    }
+
+    .checkoutProductsSection{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        background-color: var(--main-color);
+        border-radius: 20px;
+        padding: 2.5rem;
+        color: var(--dark-color);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+        .checkoutHeader{
+            display: flex;
+            flex-direction: column;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 1rem;
+
+            h3{
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: var(--dark-color);
+                font-family: var(--heading-font);
+            }
+
+            p{
+                font-size: 1rem;
+                color: var(--dark-color);
+                font-family: var(--body-font);
+                letter-spacing: 1px;
+                padding-left: 0.5rem;
+            }
+        }
+
+        .orderSection {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .orderHeader{
+                border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+                padding-bottom: 0.5rem;
+
+                h3 {
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                    font-family: var(--heading-font);
+                    color: var(--dark-color);      
+                }
+
+                p{
+                    font-size: 1rem;
+                    font-family: var(--body-font);
+                    color: #444;
+                    padding-left: 0.5rem;
+                }
+            }
+
+            .orderItemsList {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                .orderItemRow {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 1rem;
+                    background-color: var(--secondary-color);
+                    border: 2px solid var(--secondary-color);
+                    border-radius: 10px;
+                    padding: 1rem 1.5rem;
+                    
+                    .itemInfo {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.5rem;
+
+                        h4 {
+                            font-size: 1rem;
+                            font-family: var(--body-font);
+                            color: var(--dark-color);
+                            font-weight: 700;
+                        }
+
+                        .itemMeta {
+                            font-size: 0.8rem;
+                            font-family: var(--body-font);
+                            color: #444;
+                            word-spacing: 0.2rem;
+                        }
+                    }
+
+                    .itemPricing {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-end;
+                        gap: 0.5rem;
+
+                        .subtotalLabel {
+                            font-size: 0.8rem;
+                            font-family: var(--body-font);
+                            color: #555;
+                            text-align: right;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                        }
+
+                        .subtotalAmount {
+                            font-size: 1.2rem;
+                            font-weight: 700;
+                            font-family: var(--body-font);
+                            text-align: right;
+                            color: var(--dark-color);
+                        }
+                    }
+                }
+            }
+
+            .orderOverview{
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                font-family: var(--body-font);
+                font-size: 1rem;
+                line-height: 1.5;
+                word-spacing: 1px;
+
+                h3{
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                    font-family: var(--heading-font);
+                    color: var(--dark-color);
+                }
+
+                hr {
+                    border: none;
+                    border-top: 2px dashed rgba(0, 0, 0, 0.15);
+                    margin: 0.5rem 0;
+                }
+                p{ padding-left: 1rem; }
+
+                .orderTotalItems, .orderTotalAmount {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-size: 1.2rem;
+                    color: var(--dark-color);
+
+                    strong { font-size: 1.8rem; }
+                }
+            }
+        }
+    }
+
+    form {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 2rem;
+
+        .span{ grid-column: span 2; }
+
+        h3{
+            font-family: var(--heading-font);
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-family: var(--body-font);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark-color);
+
+            input, select, textarea {
+                width: 100%;
+                padding: 0.8rem 1rem;
+                font-family: var(--body-font);
+                font-size: 1rem;
+                color: var(--dark-color);
+                border: 2px solid var(--secondary-color);
+                border-radius: 10px;
+                outline: none;
+                transition: 0.2s ease-in-out;
+            }
+
+            textarea {
+                resize: vertical;
+                min-height: 110px;
+                line-height: 1.5;
+            }
+        }
+
+        .formActions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+
+            button {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.8rem 1.5rem;
+                font-family: var(--body-font);
+                font-size: 1rem;
+                font-weight: 700;
+                border-radius: 10px;
+                cursor: pointer;
+                border: none;
+                transition: 0.2s ease-in-out;
+
+                &:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
+            }
+
+            .placeOrderBtn {
+                background-color: var(--tertiary-color);
+                color: var(--light-color);
+
+                &:hover:not(:disabled) { background-color: var(--secondary-color); }
+
+                &:disabled{
+                    background-color: #ddd;
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
+            }
+
+            .cancelBtn {
+                background-color: transparent;
+                border: 2px solid var(--tertiary-color);
+                color: var(--tertiary-color);
+
+                &:hover {
+                    background-color: var(--tertiary-color);
+                    color: var(--light-color);
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 800px){
+    .orderFormContainer{
+        padding: 2rem;
+
+        .backBtn{ font-size: 0.8rem; }
+
+        header{
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 2rem;
+
+            h2{ font-size: 1.2rem; }
+            p{ font-size: 0.8rem; }
+        }
+
+        .checkoutProductsSection{
+            gap: 1rem;
+
+            .checkoutHeader{
+                h3{ font-size: 1..5rem; }
+                p{ font-size: 0.8rem; }
+            }
+
+            .orderSection {
+                .orderHeader{
+                    h3 { font-size: 1.5rem;  }
+                    p{ font-size: 0.8rem; }
+                }
+
+                .orderItemsList .orderItemRow {
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+
+                    .itemInfo, .itemPricing{
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        width: 100%;
+                    }
+
+                    .itemPricing {
+                        flex: 1;
+                        flex-direction: row;
+                        border: none;
+                        border-top: 2px dashed rgba(0, 0, 0, 0.2);
+                        padding-top: 1rem;
+
+                        .subtotalLabel{ text-align: left; }
+                        .subtotalAmount { flex: 1; }
+                    }
+                }
+
+                .orderOverview{
+                    h3{ font-size: 1.5rem; }
+                    hr { margin: 0.2rem 0; }
+                    p{ padding-left: 0; }
+
+                    .orderTotalItems, .orderTotalAmount {
+                        align-items: flex-end;
+                        font-size: 1rem;
+                        strong { font-size: 1.2rem; }
+                    }
+                }
+            }
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+
+            h3{ font-size: 1.5rem; }
+
+            label, label input, label select, label textarea, 
+            .formActions button {
+                font-size: 0.8rem;
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+.errorNote[role='alert'] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    background-color: rgb(255, 138, 138);
+    border: none;
+    color: var(--danger);
+
+    p {
+        font-family: var(--body-font);
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--dark-color);
+    }
+
+    button {
+        padding: 0.35rem 0.8rem;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        background-color: var(--light-color);
+        color: rgb(255, 113, 113);
+        font-family: var(--body-font);
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+
+        &:hover{ background-color: #ddd; }
+    }
+}
