@@ -119,7 +119,54 @@ export default function OrderView() {
                 </div>
 
                 <div className="headerActions">
-                    {isPending && (
+                    <div className="statusDisplay">
+                        <span className={`statusBadge ${order.status?.toLowerCase()}`}>
+                            {capitalizeWords(order.status || 'Pending')}
+                        </span>
+
+                        <span className={`statusBadge ${order.isPaid ? "paid" : "unpaid"}`}>
+                            {order.isPaid ? "Paid" : "Unpaid"}
+                        </span>
+                    </div>
+                </div>
+            </header>
+
+            <ErrorNote error={error} onRetry={loadOrder} />
+
+            {order && (
+                <div className="orderDetailCard">
+                    {canManage ? (
+                        <div className="statusManagementBar">
+                            <div className="statusWrapper">
+                                <label htmlFor="statusSelect">Order Status: </label>
+                                <select
+                                    id="statusSelect"
+                                    value={order.status}
+                                    disabled={updating}
+                                    onChange={(e) => handleStatusUpdate(e.target.value)}
+                                >
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Shipped">Shipped</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </div>
+
+                            <div className="statusWrapper">
+                                <label htmlFor="paymentStatusSelect">Payment Status: </label>
+                                <select
+                                    id="paymentStatusSelect"
+                                    value={Boolean(order.isPaid)}
+                                    disabled={updating}
+                                    onChange={(e) => handlePaymentStatusUpdate(e.target.value)}
+                                >
+                                    <option value="false">Unpaid</option>
+                                    <option value="true">Paid</option>
+                                </select>
+                            </div>
+                        </div>
+                    ) : isPending && (
                         <div className="orderActions">
                             <button
                                 type="button"
@@ -138,51 +185,6 @@ export default function OrderView() {
                             >
                                 <i className="fa-solid fa-trash"></i>Cancel Order
                             </button>
-                        </div>
-                    )}
-
-                    <div className="statusDisplay">
-                        <span className={`statusBadge ${order.status?.toLowerCase()}`}>
-                            {capitalizeWords(order.status || 'Pending')}
-                        </span>
-
-                        <span className={`statusBadge ${order.isPaid ? "paid" : "unpaid"}`}>
-                            {order.isPaid ? "Paid" : "Unpaid"}
-                        </span>
-                    </div>
-                </div>
-            </header>
-
-            <ErrorNote error={error} onRetry={loadOrder} />
-
-            {order && (
-                <div className="orderDetailCard">
-                    {canManage && (
-                        <div className="statusManagementBar">
-                            <label htmlFor="statusSelect">Update Order Status</label>
-                            <select
-                                id="statusSelect"
-                                value={order.status}
-                                disabled={updating}
-                                onChange={(e) => handleStatusUpdate(e.target.value)}
-                            >
-                                <option value="Pending">Pending</option>
-                                <option value="Processing">Processing</option>
-                                <option value="Shipped">Shipped</option>
-                                <option value="Delivered">Delivered</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-
-                            <label htmlFor="paymentStatusSelect">Payment Status: </label>
-                            <select
-                                id="paymentStatusSelect"
-                                value={Boolean(order.isPaid)}
-                                disabled={updating}
-                                onChange={(e) => handlePaymentStatusUpdate(e.target.value)}
-                            >
-                                <option value="false">Unpaid</option>
-                                <option value="true">Paid</option>
-                            </select>
                         </div>
                     )}
 
