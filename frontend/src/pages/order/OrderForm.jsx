@@ -143,76 +143,54 @@ export default function OrderForm() {
             <ErrorNote error={error} />
 
             <section className="checkoutProductsSection">
-                <div className="checkoutHeader">
-                    <h3>Items to Review</h3>
-                    <p>Please double-check your selected items and quantities before placing your order.</p>
-                </div>
-
-                <div className="bodyWrapper">
-                    <div className="orderOverview">
-                        <h3>Order Total Items/Amount</h3>
-                        
-                        <div className="detailWrapper">
-                            <span className="itemsHeading">Total Items</span>
-                            <span className="totalItems">{totalItemsCount}</span>
-                        </div>
-
-                        <div className="detailWrapper">
-                            <span className="amountHeading">Total Amount</span>
-                            <span className="totalAmount">PHP {totalAmount.toFixed(2)}</span>
-                        </div>
+                <div className="orderSection">
+                    <div className="orderHeader">
+                        <h3>Ordered Items to Review</h3>
+                        <p>Please double-check your selected items and quantities before placing your order.</p>
                     </div>
 
-                    <div className="checkoutProductFlex">
+                    <div className="orderItemsList">
                         {cartItems.map((item) => {
                             const product = item.product || item;
-                            const itemId = item._id || item.id;
+                            const itemName = product.name || item.name || 'Product Item';
+                            const itemPrice = Number(item.price || product.price || 0);
+                            const itemQuantity = Number(item.quantity || 1);
                             const itemSubtotal = ((product.price || 0) * item.quantity).toFixed(2);
 
                             return (
-                                <div key={itemId} className="productCard">
-                                    <div className="productHeader">
-                                        <h4>{product.name}</h4>
-                                        <p className="categoryTag">{capitalizeWords(product.category || 'General')}</p>
+                                <div key={item._id || item.id || product._id} className="orderItemRow">
+                                    <div className="itemInfo">
+                                        <h4>{itemName}</h4>
+                                        
+                                        <span className="itemMeta">
+                                            <strong>Unit Price:</strong> PHP {itemPrice.toFixed(2)}
+                                        </span>
+
+                                        <span className="itemMeta">
+                                            <strong>Quantity:</strong> {itemQuantity}
+                                        </span>
                                     </div>
                                     
-                                    <div className="bodyWrapper">
-                                        <div className="productImageWrapper">                                
-                                            <img
-                                                src="/placeholder.png"
-                                                alt={product.name}
-                                                className="productDetailImage"
-                                            />
-
-                                            <p className="stockStatus">
-                                                {product.stock > 0 ? `${product.stock} items in stock` : 'Out of Stock'}
-                                            </p>
-                                        </div>
-
-                                        <div className="productDetailInfo">
-                                            <p className="productDescription">{product.description || 'No description provided.'}</p>
-
-                                            <div className="orderItemMeta">
-                                                <div className="detailWrapper">
-                                                    <span className="unitHeading">Unit Price</span>
-                                                    <span className="productPrice">PHP {(product.price || 0).toFixed(2)}</span>
-                                                </div>
-
-                                                <div className="detailWrapper">
-                                                    <span className="quantityHeading">Quantity</span>
-                                                    <span className="itemQuantity">{item.quantity}</span>                   
-                                                </div>
-
-                                                <div className="detailWrapper">
-                                                    <span className="subtotalHeading">Subtotal</span>
-                                                    <span className="itemSubtotal">PHP {itemSubtotal}</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div className="itemPricing">
+                                        <span className="subtotalLabel">Subtotal</span>
+                                        <span className="subtotalAmount">PHP {itemSubtotal}</span>
                                     </div>
                                 </div>
                             );
                         })}
+                    </div>
+
+                    <div className="orderOverview">
+                        <h3>Total Items & Amount</h3>
+                        <hr />
+                        <p className="orderTotalItems">
+                            <span>Total Items:</span>
+                            <strong>{totalItemsCount}</strong>
+                        </p>
+                        <p className="orderTotalAmount">
+                            <span>Total Amount:</span>
+                            <strong>PHP {totalAmount.toFixed(2)}</strong>
+                        </p>
                     </div>
                 </div>
             </section>
