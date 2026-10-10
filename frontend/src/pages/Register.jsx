@@ -60,95 +60,101 @@ export default function Register() {
             </Link>
 
             <form onSubmit={handleSubmit}>
-                <h2>Create an Account</h2>
-
-                <ErrorNote error={error} />
-
-                <div className="inputWrapper">
-                    <label>
-                        Select role
-                        <select name="role" value={formData.role} onChange={handleChange}>
-                            <option value="shopper">Shopper</option>
-                            <option value="seller">Seller</option>
-                        </select>
-                    </label>
-
-                    <label>
-                        First Name
-                        <input
-                            name="firstName"
-                            placeholder="Enter your first name"
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-
-                    <label>
-                        Middle Name (Optional)
-                        <input
-                            name="middleName"
-                            placeholder="Enter your middle name"
-                            value={formData.middleName}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    
-                    <label>
-                        Last Name
-                        <input
-                            name="lastName"
-                            placeholder="Enter your last name"
-                            value={formData.lastName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-
-                    <label className="span">
-                        Email
-                        <input
-                            name="email"
-                            type="email"
-                            placeholder="e.g. example@email.com"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-
-                    <label>
-                        New Password
-                        <input
-                            name="password"
-                            type="password"
-                            placeholder="Minimum of 8 characters"
-                            value={formData.password}
-                            onChange={handleChange}
-                            minLength={8}
-                            required
-                        />
-                    </label>
-
-                    <label>
-                        Confirm Password
-                        <input
-                            name="confirmPassword"
-                            type="password"
-                            placeholder="Repeat your password"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            minLength={8}
-                            required
-                        />
-                    </label>
+                <h2 className="span">Create an Account</h2>
+                
+                <div className="span">
+                    <ErrorNote error={error} />
                 </div>
 
-                <button type="submit" className="registerBtn" disabled={submitting}>
+                <div className="inputWrapper">
+                    <label htmlFor="roleSelect">Select role <span className="requiredMarker">*</span></label>
+                    <select id="roleSelect" name="role" value={formData.role} onChange={handleChange}>
+                        <option value="shopper">Shopper</option>
+                        <option value="seller">Seller</option>
+                    </select>
+                </div>
+                
+                <div className="inputWrapper">
+                    <label htmlFor="firstName">First Name <span className="requiredMarker">*</span></label>
+                    <input
+                        id="firstName"
+                        name="firstName"
+                        placeholder="Enter your first name"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="inputWrapper">
+                    <label htmlFor="middleName">Middle Name (Optional)</label>
+                    <input
+                        id="middleName"
+                        name="middleName"
+                        placeholder="Enter your middle name"
+                        value={formData.middleName}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div className="inputWrapper">
+                    <label htmlFor-="lastName">Last Name <span className="requiredMarker">*</span></label>
+                    <input
+                        id="lastName"
+                        name="lastName"
+                        placeholder="Enter your last name"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="inputWrapper span">
+                    <label htmlFor="email">Email <span className="requiredMarker">*</span></label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="e.g. example@email.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="inputWrapper">
+                    <label htmlFor="newPassword">New Password <span className="requiredMarker">*</span></label>
+                    <input
+                        id="newPassword"
+                        name="password"
+                        type="password"
+                        placeholder="Minimum of 8 characters"
+                        value={formData.password}
+                        onChange={handleChange}
+                        minLength={8}
+                        required
+                    />
+                </div>
+
+                <div className="inputWrapper">
+                    <label htmlFor="confirmPassword">Confirm Password <span className="requiredMarker">*</span></label>
+                    <input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        placeholder="Repeat your password"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        minLength={8}
+                        required
+                    />
+                </div>
+
+                <button type="submit" className="registerBtn span" disabled={submitting}>
                     {submitting ? 'Creating account...' : 'Register'}
                 </button>
 
-                <p className="switchLink">Already have an account? <Link to="/login">Login here</Link></p>
+                <p className="switchLink span">Already have an account? <Link to="/login">Login here</Link></p>
             </form>
         </div>
     );

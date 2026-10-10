@@ -197,10 +197,11 @@ export default function OrderForm() {
 
             <form onSubmit={handleSubmitOrder}>
                 <h3 className="span">Shipping Information</h3>
-
-                <label>
-                    Street Address
+                
+                <div className="inputWrapper">
+                    <label htmlFor="streetAddress">Street Address <span className="requiredMarker">*</span></label>
                     <input
+                        id="streetAddress"
                         name="street"
                         type="text"
                         placeholder="Enter your street address"
@@ -208,11 +209,12 @@ export default function OrderForm() {
                         onChange={handleAddressChange}
                         required
                     />
-                </label>
-
-                <label>
-                    City
+                </div>
+                
+                <div className="inputWrapper">
+                    <label htmlFor="city">City <span className="requiredMarker">*</span></label>
                     <input
+                        id="city"
                         name="city"
                         type="text"
                         placeholder="Enter your city"
@@ -220,23 +222,25 @@ export default function OrderForm() {
                         onChange={handleAddressChange}
                         required
                     />
-                </label>
+                </div>
 
-                <label>
-                    Province / State
+                <div className="inputWrapper">
+                    <label htmlFor="province">Province / State <span className="requiredMarker">*</span></label>
                     <input
+                        id="province"
                         name="province"
                         type="text"
                         placeholder="Enter your province"
                         value={shippingAddress.province}
                         onChange={handleAddressChange}
                         required
-                    />
-                </label>
-
-                <label>
-                    Postal Code
+                    />  
+                </div>
+                
+                <div className="inputWrapper">
+                    <label htmlFor="postalCode">Postal Code <span className="requiredMarker">*</span></label>
                     <input
+                        id="postalCode"
                         name="postalCode"
                         type="text"
                         placeholder="Enter your postal code"
@@ -244,11 +248,12 @@ export default function OrderForm() {
                         onChange={handleAddressChange}
                         required
                     />
-                </label>
-
-                <label>
-                    Contact Phone
+                </div>
+                
+                <div className="inputWrapper">
+                    <label htmlFor="contactPhone">Contact Phone <span className="requiredMarker">*</span></label>
                     <input
+                        id="contactPhone"
                         name="phone"
                         type="tel"
                         placeholder="Enter your contact number"
@@ -256,17 +261,17 @@ export default function OrderForm() {
                         onChange={handleAddressChange}
                         required
                     />
-                </label>
-
-                <label>
-                    Payment Method
-                    <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+                </div>
+                
+                <div className="inputWrapper">
+                    <label htmlFor="paymentMethod">Payment Method <span className="requiredMarker">*</span></label>
+                    <select id="paymentMethod" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
                         <option value="Cash on Delivery">Cash on Delivery</option>
                         <option value="Credit/Debit Card">Credit / Debit Card</option>
                         <option value="E-Wallet (GCash/Maya)">E-Wallet (GCash/Maya)</option>
                     </select>
-                </label>
-
+                </div>
+            
                 <div className="formActions span">
                     <button
                         type="submit"

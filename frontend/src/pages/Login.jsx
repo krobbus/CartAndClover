@@ -42,43 +42,45 @@ export default function Login() {
             </Link>
 
             <form onSubmit={handleSubmit}>
-                <h2>Login to Cart & Clover</h2>
+                <h2 className="span">Login to Cart & Clover</h2>
 
-                <ErrorNote error={error} />
+                <div className="span">
+                    <ErrorNote error={error} />
+                </div>
                 
-                <div className="inputWrapper">
-                    <label className="span">
-                        Email
-                        <input
-                            type="email"
-                            name="email"
-                            className="span"
-                            placeholder="Enter your email"
-                            value={form.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-
-                    <label className="span">
-                        Password
-                        <input
-                            type="password"
-                            name="password"
-                            className="span"
-                            placeholder="Enter your password"
-                            value={form.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
+                <div className="inputWrapper span">
+                    <label id="email">Email</label>
+                    <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        className="span"
+                        placeholder="Enter your email"
+                        value={form.email}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
 
-                <button className="loginBtn" type="submit" disabled={submitting}>
+                <div className="inputWrapper span">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        className="span"
+                        placeholder="Enter your password"
+                        value={form.password}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <button className="loginBtn span" type="submit" disabled={submitting}>
                     {submitting ? 'Logging in...' : 'Login'}
                 </button>
 
-                <p className="switchLink">Don't have an account? <Link to="/register">Register here</Link></p>
+                <p className="switchLink span">Don't have an account? <Link to="/register">Register here</Link></p>
             </form>
         </div>
     );

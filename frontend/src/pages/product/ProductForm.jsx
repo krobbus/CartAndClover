@@ -110,33 +110,35 @@ export default function ProductForm() {
                 <div className="span">
                     <ErrorNote error={error} />
                 </div>
-
-                <label>
-                    Product Name
+                
+                <div className="inputWrapper">
+                    <label htmlFor="name">Product Name <span className="requiredMarker">*</span></label>
                     <input
+                        id="name"
                         name="name"
                         type="text"
                         value={formData.name}
                         onChange={handleChange}
                         required
                         placeholder="e.g. Leather Jacket"
-                    />
-                </label>
-
-                <label>
-                    Category
-                    <select name="category" value={formData.category} onChange={handleChange}>
+                    />    
+                </div>
+                
+                <div className="inputWrapper">
+                    <label htmlFor="category">Category <span className="requiredMarker">*</span></label>
+                    <select id="category" name="category" value={formData.category} onChange={handleChange}>
                         {categories.map((cat) => (
                             <option key={cat} value={cat}>
                                 {capitalizeWords(cat)}
                             </option>
                         ))}
                     </select>
-                </label>
-
-                <label>
-                    Price (PHP)
+                </div>
+                
+                <div className="inputWrapper">
+                    <label htmlFor="price">Price (PHP) <span className="requiredMarker">*</span></label>
                     <input
+                        id="price"
                         placeholder="0.00"
                         name="price"
                         type="number"
@@ -146,30 +148,32 @@ export default function ProductForm() {
                         onChange={handleChange}
                         required
                     />
-                </label>
-
-                <label>
-                    Stock Quantity
+                </div>
+                
+                <div className="inputWrapper">
+                    <label htmlFor="stockQuantity">Stock Quantity <span className="requiredMarker">*</span></label>
                     <input
+                        id="stockQuantity"
                         name="stock"
                         type="number"
                         min="0"
                         value={formData.stock}
                         onChange={handleChange}
                         required
-                    />
-                </label>
-
-                <label className="span">
-                    Description
+                    />    
+                </div>
+                
+                <div className="inputWrapper span">
+                    <label id="description">Description (Optional)</label>
                     <textarea
+                        id="description"
                         name="description"
                         rows="4"
                         value={formData.description}
                         onChange={handleChange}
                         placeholder="Provide details regarding the product..."
                     />
-                </label>
+                </div>
 
                 <div className="formActions span">
                     <button type="submit" className="submitBtn" disabled={submitting}>
