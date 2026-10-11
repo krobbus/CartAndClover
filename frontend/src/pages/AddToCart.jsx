@@ -62,6 +62,12 @@ export default function AddToCart() {
         );
     };
 
+    const allSelected = cartItems.length > 0 && cartItems.every((item) => selectedItem.includes(item._id || item.id));
+
+    const toggleSelectAll = () => {
+        setSelectedItem(allSelected ? [] : cartItems.map((item) => item._id || item.id));
+    };
+
     const handleUpdateQuantity = async (itemId, newQuantity) => {
         if (newQuantity < 1) return;
         setUpdatingId(itemId);
@@ -150,12 +156,18 @@ export default function AddToCart() {
     if (loading) return <Loading label="Loading your cart..." />;
 
     return (
-        <div className="flex min-h-[100dvh] flex-col justify-start gap-2 p-8 md:p-16">
-            <header className="flex flex-col pb-8">
-                <h1 className="font-[family-name:var(--heading-font)] text-2xl font-bold text-[color:var(--tertiary-color)] md:text-3xl">
+        <div
+            className={`flex min-h-[100dvh] flex-col justify-start gap-6 p-5 sm:p-8 md:p-16 ${
+                cartItems.length === 0 || !showSummary
+                    ? ''
+                    : 'pb-44 sm:pb-44 md:pb-64'
+            }`}
+        >
+            <header className="flex flex-col gap-1">
+                <h1 className="font-[family-name:var(--heading-font)] text-3xl font-bold text-[color:var(--tertiary-color)] md:text-4xl">
                     Shopping Cart
                 </h1>
-                <p className="pl-2 font-[family-name:var(--body-font)] text-sm tracking-[1px] text-[color:var(--dark-color)] md:text-base">
+                <p className="font-[family-name:var(--body-font)] text-sm tracking-[0.5px] text-[color:var(--dark-color)] md:text-base">
                     Review items in your cart before checking out
                 </p>
             </header>
@@ -170,151 +182,217 @@ export default function AddToCart() {
                     }
                 />
             ) : (
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] justify-center gap-4 md:justify-start">
-                    {cartItems.map((item) => {
-                        const itemId = item._id || item.id;
-                        const product = item.product || item;
-                        const isUpdating = updatingId === itemId;
-                        const isSelected = selectedItem.includes(itemId);
+                <>
+                    <div className="flex items-center justify-between gap-3">
+                        <p className="font-[family-name:var(--body-font)] text-xs text-[#555] md:text-sm tracking-wider">
+                            {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your cart
+                            <span className="text-[color:var(--tertiary-color)] font-bold">{selectedItem.length > 0 && ` (${selectedItem.length} selected)`}</span>
+                        </p>
 
-                        return (
-                            <div key={itemId} className="flex justify-start gap-2">
-                                <div className="flex flex-col gap-2">
-                                    <input
-                                        className="grid h-8 w-8 shrink-0 cursor-pointer appearance-none place-content-center rounded-[10px] border-2 border-[color:var(--tertiary-color)] bg-[color:var(--light-color)] transition duration-200 ease-in-out before:h-[1.4rem] before:w-[1.4rem] before:scale-0 before:rounded-md before:bg-[color:var(--tertiary-color)] before:content-[''] checked:before:scale-100"
-                                        type="checkbox"
-                                        checked={isSelected}
-                                        onChange={() => toggleSelectItem(itemId)}
-                                    />
+                        <button
+                            type="button"
+                            className="cursor-pointer rounded-full border-2 border-[color:var(--main-color)] bg-white px-4 py-1.5 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out hover:border-[color:var(--secondary-color)] hover:bg-[rgba(164,223,204,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)] md:py-2 md:text-sm"
+                            onClick={toggleSelectAll}
+                        >
+                            {allSelected ? 'Clear selection' : 'Select all'}
+                        </button>
+                    </div>
 
-                                    <button
-                                        type="button"
-                                        className="w-full cursor-pointer rounded-[10px] bg-[rgb(200,100,100)] p-2 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:bg-[rgb(180,80,80)]"
-                                        onClick={() => handleRemoveItem(itemId, product)}
-                                    >
-                                        <i className="fa-solid fa-xmark"></i>
-                                    </button>
-                                </div>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] md:gap-6">
+                        {cartItems.map((item) => {
+                            const itemId = item._id || item.id;
+                            const product = item.product || item;
+                            const isUpdating = updatingId === itemId;
+                            const isSelected = selectedItem.includes(itemId);
 
-                                <div className="relative flex min-w-0 flex-1 flex-col justify-end rounded-[20px] bg-[color:var(--secondary-color)] p-4 pb-2">
-                                    <div className="flex flex-wrap items-center justify-between gap-x-2 pb-4">
-                                        <h3 className="font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] md:text-base">
-                                            {product.name}
-                                        </h3>
-                                        <p className="font-[family-name:var(--body-font)] text-sm text-[#444] md:text-base">
-                                            {capitalizeWords(product.category || 'General')}
-                                        </p>
-                                    </div>
+                            const unitPrice = Number(product.price) || 0;
+                            const quantity = Number(item.quantity) || 0;
+                            const isSoldOut = !(product.stock > 0);
+                            const isLowStock = !isSoldOut && product.stock <= 5;
+                            const atStockLimit = product.stock > 0 && quantity >= product.stock;
 
-                                    <div className="relative aspect-square">
-                                        <p className="absolute right-0 top-0 rounded-bl-[20px] bg-[color:var(--secondary-color)] pb-2 pl-4 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--light-color)] md:text-base">
-                                            PHP {product.price}
-                                        </p>
-
+                            return (
+                                <article
+                                    key={itemId}
+                                    className={`relative flex min-w-0 overflow-hidden rounded-[20px] border-2 bg-white transition duration-200 ease-in-out sm:flex-col ${
+                                        isSelected
+                                            ? 'border-[color:var(--tertiary-color)] shadow-[0_8px_22px_rgba(84,146,125,0.25)]'
+                                            : 'border-[color:var(--main-color)]'
+                                    }`}
+                                >
+                                    <div className="relative min-h-[11rem] w-28 shrink-0 self-stretch bg-[color:var(--main-color)] sm:aspect-[4/3] sm:min-h-0 sm:w-auto sm:self-auto">
                                         <img
                                             src={placeholderDisplay(product.category)}
                                             alt={product.name}
-                                            className="h-full w-full rounded-[20px] object-cover"
+                                            className={`absolute inset-0 h-full w-full object-[20%_15%] md:object-center object-cover ${
+                                                isSoldOut ? 'opacity-50 grayscale' : ''
+                                            }`}
                                         />
 
-                                        <p className="absolute inset-x-2.5 bottom-2.5 rounded-[20px] bg-[color:var(--secondary-color)] px-4 py-0.5 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)]">
-                                            {product.stock > 0 ? `${product.stock} items in stock` : 'Out of Stock'}
-                                        </p>
+                                        <span className="absolute left-2.5 top-2.5 hidden rounded-full bg-[rgba(255,255,255,0.92)] px-2.5 py-1 font-[family-name:var(--body-font)] text-[10px] font-bold leading-none text-[color:var(--tertiary-color)] sm:block md:text-xs">
+                                            {capitalizeWords(product.category || 'General')}
+                                        </span>
+
+                                        <label className="absolute left-2 top-2 grid h-8 w-8 cursor-pointer place-items-center sm:left-auto sm:right-2.5 sm:top-2.5">
+                                            <input
+                                                type="checkbox"
+                                                className="peer sr-only"
+                                                aria-label={`Select ${product.name}`}
+                                                checked={isSelected}
+                                                onChange={() => toggleSelectItem(itemId)}
+                                            />
+                                            <span className="grid h-6 w-6 place-items-center rounded-md border-2 border-[color:var(--tertiary-color)] bg-white text-transparent transition duration-200 ease-in-out before:-mt-px before:h-2.5 before:w-1.5 before:rotate-45 before:border-b-2 before:border-r-2 before:border-current before:content-[''] peer-checked:bg-[color:var(--tertiary-color)] peer-checked:text-[color:var(--light-color)] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[color:var(--tertiary-color)]"></span>
+                                        </label>
                                     </div>
 
-                                    <div className="flex flex-col gap-4 py-4">
-                                        <div className="flex justify-center gap-2">
+                                    <div className="flex min-w-0 flex-1 flex-col gap-3 p-3 md:p-4">
+                                        <div className="flex flex-col gap-1">
+                                            <span className="w-fit rounded-full bg-[color:var(--light-color)] px-2.5 py-0.5 font-[family-name:var(--body-font)] text-[10px] font-bold text-[color:var(--tertiary-color)] sm:hidden">
+                                                {capitalizeWords(product.category || 'General')}
+                                            </span>
+
+                                            <h3 className="line-clamp-2 font-[family-name:var(--heading-font)] text-lg font-bold leading-tight text-[color:var(--dark-color)] md:text-xl">
+                                                {product.name}
+                                            </h3>
+
+                                            <div className="flex flex-wrap items-baseline justify-between gap-x-2">
+                                                <p className="font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--tertiary-color)] md:text-base">
+                                                    PHP {unitPrice.toFixed(2)}
+                                                    <span className="pl-1 text-xs font-normal text-[#555]">each</span>
+                                                </p>
+                                                <p
+                                                    className={`font-[family-name:var(--body-font)] text-[11px] font-bold md:text-xs ${
+                                                        isSoldOut
+                                                            ? 'text-[#991b1b]'
+                                                            : isLowStock
+                                                                ? 'text-[#92400e]'
+                                                                : 'text-[#555]'
+                                                    }`}
+                                                >
+                                                    {isSoldOut ? 'Sold out' : isLowStock ? `Only ${product.stock} left` : `${product.stock} in stock`}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-auto flex flex-col gap-3">
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    type="button"
+                                                    aria-label="Decrease quantity"
+                                                    className="grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-[10px] border-2 border-[color:var(--main-color)] bg-[color:var(--light-color)] font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out hover:enabled:border-[color:var(--tertiary-color)] hover:enabled:bg-[color:var(--tertiary-color)] hover:enabled:text-[color:var(--light-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)] disabled:cursor-not-allowed disabled:opacity-50"
+                                                    disabled={isUpdating || item.quantity <= 1}
+                                                    onClick={() => handleUpdateQuantity(itemId, item.quantity - 1)}
+                                                >
+                                                    <i class="fa-solid fa-minus"></i>
+                                                </button>
+
+                                                <input
+                                                    className="h-9 min-w-0 flex-1 rounded-[10px] border-2 border-[color:var(--main-color)] bg-white text-center font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] outline-none transition duration-200 ease-in-out focus:border-[color:var(--tertiary-color)]"
+                                                    aria-label="Quantity"
+                                                    value={item.quantity}
+                                                    min="1"
+                                                    max={product.stock || undefined}
+                                                    onChange={(e) => handleInputChange(itemId, e.target.value, product.stock)}
+                                                    onBlur={() => handleInputFocus(itemId, item.quantity)}
+                                                />
+
+                                                <button
+                                                    type="button"
+                                                    aria-label="Increase quantity"
+                                                    className="grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-[10px] border-2 border-[color:var(--main-color)] bg-[color:var(--light-color)] font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out hover:enabled:border-[color:var(--tertiary-color)] hover:enabled:bg-[color:var(--tertiary-color)] hover:enabled:text-[color:var(--light-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)] disabled:cursor-not-allowed disabled:opacity-50"
+                                                    disabled={isUpdating || atStockLimit}
+                                                    onClick={() => handleUpdateQuantity(itemId, item.quantity + 1)}
+                                                >
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+                                            </div>
+
+                                            <div className="flex items-center justify-between gap-2 border-t-2 border-dashed border-[#dcebe6] pt-3">
+                                                <span className="font-[family-name:var(--body-font)] text-xs text-[#555]">Subtotal</span>
+                                                <span className="font-[family-name:var(--body-font)] text-sm font-bold tabular-nums text-[color:var(--dark-color)] md:text-base">
+                                                    PHP {(unitPrice * quantity).toFixed(2)}
+                                                </span>
+                                            </div>
+
                                             <button
                                                 type="button"
-                                                className="cursor-pointer rounded-[10px] bg-[color:var(--main-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold transition duration-200 ease-in-out hover:enabled:bg-[color:var(--tertiary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:opacity-60"
-                                                disabled={isUpdating || item.quantity <= 1}
-                                                onClick={() => handleUpdateQuantity(itemId, item.quantity - 1)}
-                                            >
-                                                -
-                                            </button>
-
-                                            <input
-                                                className="min-w-0 max-w-[6rem] flex-1 rounded-[10px] border-2 border-[color:var(--main-color)] bg-[color:var(--light-color)] text-center font-[family-name:var(--body-font)] text-xs font-bold"
-                                                value={item.quantity}
-                                                min="1"
-                                                max={product.stock || undefined}
-                                                onChange={(e) => handleInputChange(itemId, e.target.value, product.stock)}
-                                                onBlur={() => handleInputFocus(itemId, item.quantity)}
-                                            />
-
-                                            <button
-                                                type="button"
-                                                className="cursor-pointer rounded-[10px] bg-[color:var(--main-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold transition duration-200 ease-in-out hover:enabled:bg-[color:var(--tertiary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:opacity-60"
+                                                className="flex cursor-pointer items-center justify-center gap-2 rounded-[10px] border-2 border-[#ecc9c9] bg-transparent px-3 py-2 font-[family-name:var(--body-font)] text-xs font-bold text-[#a24a4a] transition duration-200 ease-in-out hover:border-[rgb(200,100,100)] hover:bg-[rgb(200,100,100)] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(200,100,100)] disabled:cursor-not-allowed disabled:opacity-50"
                                                 disabled={isUpdating}
-                                                onClick={() => handleUpdateQuantity(itemId, item.quantity + 1)}
+                                                onClick={() => handleRemoveItem(itemId, product)}
                                             >
-                                                +
+                                                <i className="fa-solid fa-trash"></i>Remove
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
+                                </article>
+                            );
+                        })}
+                    </div>
+                </>
             )}
 
-            <div
-                className={`fixed bottom-2.5 left-2.5 right-2.5 z-[2] flex-col gap-2 rounded-[20px] bg-[color:var(--secondary-color)] p-3 md:left-auto md:gap-4 md:p-4 ${
+            <aside
+                aria-label="Order summary"
+                className={`fixed inset-x-3 bottom-3 z-[2] flex-col gap-2 rounded-[20px] border border-[color:var(--main-color)] bg-white p-3 shadow-[0_12px_32px_rgba(40,40,40,0.2)] md:inset-x-auto md:bottom-6 md:right-6 md:w-[360px] md:gap-4 md:p-5 ${
                     showSummary ? 'flex' : 'hidden'
                 }`}
             >
-                <button
-                    type="button"
-                    className="absolute -top-[60px] right-3 cursor-pointer rounded-[10px] bg-[color:var(--secondary-color)] px-4 py-3 text-xl text-[color:var(--light-color)] transition duration-200 ease-in-out hover:text-[color:var(--dark-color)] md:top-3 md:rounded-full md:bg-transparent md:px-2 md:py-[0.2rem]"
-                    onClick={() => setShowSummary(false)}
-                >
-                    <i className="fa-solid fa-eye-slash"></i>
-                </button>
-
-                <h2 className="whitespace-nowrap text-center font-[family-name:var(--heading-font)] text-base font-bold text-[color:var(--light-color)] md:text-2xl">
-                    Order Summary
-                </h2>
-
-                <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-                    <div className="flex flex-col gap-[0.2rem] rounded-[10px] bg-[color:var(--main-color)] px-4 py-2">
-                        <span className="font-[family-name:var(--body-font)] text-[10px] tracking-[1px] text-[color:var(--dark-color)] md:text-xs">
-                            Total Items
-                        </span>
-                        <span className="font-[family-name:var(--body-font)] text-xs font-bold tracking-[1px] text-[color:var(--dark-color)] md:text-base">
-                            {totalItemsCount} item
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col gap-[0.2rem] rounded-[10px] bg-[color:var(--main-color)] px-4 py-2">
-                        <span className="font-[family-name:var(--body-font)] text-[10px] tracking-[1px] text-[color:var(--dark-color)] md:text-xs">
-                            Total Amount
-                        </span>
-                        <span className="font-[family-name:var(--body-font)] text-xs font-bold tracking-[1px] text-[color:var(--dark-color)] md:text-base">
-                            PHP {totalAmount.toFixed(2)}
-                        </span>
-                    </div>
+                <div className="flex items-center justify-between gap-3">
+                    <h2 className="font-[family-name:var(--heading-font)] text-xl font-bold text-[color:var(--tertiary-color)] md:text-2xl">
+                        Order Summary
+                    </h2>
 
                     <button
                         type="button"
-                        className="flex cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[color:var(--light-color)] px-3 py-2.5 font-[family-name:var(--body-font)] text-[10px] font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--main-color)] disabled:cursor-not-allowed disabled:bg-[#ddd] disabled:opacity-60 md:px-4 md:py-3 md:text-xs"
+                        aria-label="Hide order summary"
+                        className="grid h-8 w-8 cursor-pointer place-items-center rounded-full text-[color:var(--secondary-color)] transition duration-200 ease-in-out hover:bg-[color:var(--light-color)] hover:text-[color:var(--dark-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)]"
+                        onClick={() => setShowSummary(false)}
+                    >
+                        <i className="fa-solid fa-eye-slash"></i>
+                    </button>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 md:flex-col md:items-stretch md:gap-4">
+                    <dl className="flex flex-col gap-0.5 font-[family-name:var(--body-font)] md:gap-2">
+                        <div className="flex items-baseline gap-2 md:justify-between">
+                            <dt className="text-xs text-[#555] md:text-sm">Selected items</dt>
+                            <dd className="text-base font-bold tabular-nums text-[color:var(--tertiary-color)] md:text-xl">
+                                {totalItemsCount}
+                            </dd>
+                        </div>
+
+                        <div className="flex items-baseline gap-2 md:justify-between md:border-t-2 md:border-dashed md:border-[#dcebe6] md:pt-2">
+                            <dt className="text-xs text-[#555] md:text-sm">Total amount</dt>
+                            <dd className="text-base font-bold tabular-nums text-[color:var(--tertiary-color)] md:text-xl">
+                                PHP {totalAmount.toFixed(2)}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <button
+                        type="button"
+                        className="flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-[10px] border-2 border-[color:var(--tertiary-color)] bg-[color:var(--tertiary-color)] px-4 py-2.5 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:enabled:border-[color:var(--secondary-color)] hover:enabled:bg-[color:var(--secondary-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)] disabled:cursor-not-allowed disabled:border-[#ddd] disabled:bg-[#ddd] disabled:text-[#777] md:py-3 md:text-sm"
                         disabled={selectedItem.length === 0}
                         onClick={handleProceedToCheckout}
                     >
-                        <i className="fa-solid fa-money-bill-wave"></i> Proceed to Checkout
+                        <i className="fa-solid fa-credit-card"></i>
+                        <span className="md:hidden">Checkout</span>
+                        <span className="hidden md:inline">Proceed to Checkout</span>
                     </button>
                 </div>
-            </div>
+            </aside>
 
             {!showSummary && (
                 <button
                     type="button"
-                    className="fixed bottom-2.5 right-2.5 flex cursor-pointer items-center justify-center gap-2 rounded-[10px] bg-[color:var(--main-color)] px-4 py-3 font-[family-name:var(--body-font)] text-base font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:bg-[color:var(--secondary-color)]"
+                    aria-label="Show order summary"
+                    className="fixed bottom-3 right-3 z-[2] flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-[color:var(--tertiary-color)] bg-[color:var(--tertiary-color)] px-5 py-3 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--light-color)] shadow-[0_8px_22px_rgba(40,40,40,0.25)] transition duration-200 ease-in-out hover:border-[color:var(--secondary-color)] hover:bg-[color:var(--secondary-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)] md:bottom-6 md:right-6"
                     onClick={() => setShowSummary(true)}
                 >
                     <i className="fa-solid fa-eye"></i>
+                    Order Summary
                     {selectedItem.length > 0 && (
-                        <span className="text-base font-bold text-[color:var(--dark-color)]">{selectedItem.length}</span>
+                        <span className="rounded-full bg-[rgba(255,255,255,0.25)] px-2 text-xs leading-5">{selectedItem.length}</span>
                     )}
                 </button>
             )}
