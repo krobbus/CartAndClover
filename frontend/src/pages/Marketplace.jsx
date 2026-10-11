@@ -6,6 +6,7 @@ import Loading from '../components/Loading';
 import ErrorNote from '../components/ErrorNote';
 import EmptyState from '../components/EmptyState';
 import { capitalizeWords, placeholderDisplay} from '../utils.js';
+import headerBanner from '../assets/headerBanner.png';
 
 export default function Marketplace() {
     const [products, setProducts] = useState([]);
@@ -52,7 +53,7 @@ export default function Marketplace() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         loadProducts();
@@ -96,36 +97,58 @@ export default function Marketplace() {
     };
 
     return (
-        <div className="marketplaceContainer">
-            <header>
-                <h1>Welcome to Cart & Clover</h1>
-                <p>Discover everyday essentials and exclusive collections from all sellers.</p>
+        <div className="h-auto w-full">
+            <header
+                className="relative flex min-h-[100dvh] flex-col items-start justify-center gap-2 bg-cover bg-bottom bg-no-repeat px-4 py-16 sm:px-8"
+                style={{
+                    backgroundImage: `linear-gradient(to right, #000 20%, rgba(255, 255, 255, 0.1)), url(${headerBanner})`,
+                }}
+            >
+                <h1 className="font-[family-name:var(--heading-font)] text-3xl font-bold text-[color:var(--main-color)] sm:text-5xl md:text-6xl">
+                    Welcome to Cart & Clover
+                </h1>
+                <p className="max-w-[300px] pl-2 font-[family-name:var(--body-font)] text-sm tracking-[1px] text-[color:var(--light-color)] md:max-w-none md:text-base">
+                    Discover everyday essentials and exclusive collections from all sellers.
+                </p>
 
-                <button type="button" className="scrollBtn" onClick={scrollToCatalog}>
+                <button
+                    type="button"
+                    className="absolute bottom-[15%] left-[20%] right-[20%] cursor-pointer whitespace-nowrap rounded-[30px] border-[2.5px] border-[color:var(--main-color)] bg-transparent p-2.5 font-[family-name:var(--body-font)] text-sm text-[color:var(--main-color)] transition duration-200 ease-in-out drop-shadow-[0_0_10px_var(--main-color)] md:left-[35%] md:right-[35%] md:border-4 md:p-3 md:text-base md:drop-shadow-none md:hover:drop-shadow-[0_0_10px_var(--main-color)]"
+                    onClick={scrollToCatalog}
+                >
                     Explore Catalog <i className="fa-solid fa-chevron-down"></i>
                 </button>
             </header>
 
             <ErrorNote error={error} onRetry={loadProducts} />
 
-            <section className="catalogSection" ref={catalogRef}>
-                <h2>Explore Marketplace</h2>
+            <section
+                className="flex min-h-[100dvh] flex-col justify-start gap-2 p-8 md:p-16"
+                ref={catalogRef}
+            >
+                <h2 className="font-[family-name:var(--heading-font)] text-2xl font-bold text-[color:var(--tertiary-color)] md:text-3xl">
+                    Explore Marketplace
+                </h2>
 
-                <div className="filterBar">
+                <div className="flex flex-col gap-4 md:gap-2">
                     <input
                         type="text"
-                        className="searchInput"
+                        className="flex-1 rounded-[10px] border-2 border-[color:var(--secondary-color)] bg-white px-4 py-2.5 font-[family-name:var(--body-font)] text-sm md:px-8 md:py-3 md:text-base"
                         placeholder="Search all products..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
 
-                    <div className="categoryPills">
+                    <div className="flex flex-wrap justify-center gap-2 md:justify-end">
                         {categories.map((category) => (
                             <button
                                 key={category}
                                 type="button"
-                                className={`pill ${selectedCategory === category ? 'active' : ''}`}
+                                className={`cursor-pointer rounded-[10px] border-2 border-[color:var(--secondary-color)] px-3 py-1 font-[family-name:var(--body-font)] text-xs font-bold transition duration-200 ease-in-out hover:bg-[color:var(--secondary-color)] hover:text-[color:var(--light-color)] md:px-4 md:py-2 md:text-sm ${
+                                    selectedCategory === category
+                                        ? 'bg-[color:var(--secondary-color)] text-[color:var(--light-color)]'
+                                        : 'bg-transparent text-[color:var(--secondary-color)]'
+                                }`}
                                 onClick={() => setSelectedCategory(category)}
                             >
                                 {capitalizeWords(category)}
@@ -142,35 +165,44 @@ export default function Marketplace() {
                         action={canManage && <Link to="/products/new">Add a Product</Link>}
                     />
                 ) : (
-                    <div className="productGrid">
+                    <div className="my-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-[repeat(auto-fit,minmax(250px,300px))]">
                         {filteredProducts.map((product) => {
                             const isInCart = cartProductIds.includes(product._id);
-                            
+
                             return (
-                                <div key={product._id} className="productCard">
-                                    <div className="productHeader">
-                                        <h3>{product.name}</h3>
-                                        <p className="categoryTag">{capitalizeWords(product.category || 'General')}</p>
+                                <div
+                                    key={product._id}
+                                    className="min-w-0 rounded-[20px] bg-[color:var(--secondary-color)] p-3 md:p-4"
+                                >
+                                    <div className="flex flex-wrap items-center justify-between gap-x-2 pb-3 md:pb-4">
+                                        <h3 className="font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] md:text-base">
+                                            {product.name}
+                                        </h3>
+                                        <p className="font-[family-name:var(--body-font)] text-xs text-[#444] md:text-base">
+                                            {capitalizeWords(product.category || 'General')}
+                                        </p>
                                     </div>
 
-                                    <div className="productImageWrapper">
-                                        <p className="price">PHP {product.price?.toFixed(2)}</p>
-                                        
+                                    <div className="relative aspect-square">
+                                        <p className="absolute right-0 top-0 rounded-bl-[20px] bg-[color:var(--secondary-color)] pb-2 pl-4 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] md:text-base">
+                                            PHP {product.price?.toFixed(2)}
+                                        </p>
+
                                         <img
                                             src={placeholderDisplay(product.category)}
                                             alt={product.name}
-                                            className="productDetailImage"
+                                            className="h-full w-full rounded-[20px] object-cover"
                                         />
 
-                                        <p className="stockStatus">
+                                        <p className="absolute inset-x-2.5 bottom-2.5 rounded-[20px] bg-[color:var(--secondary-color)] px-2 py-1 text-center font-[family-name:var(--body-font)] text-[10px] font-bold leading-tight text-[color:var(--light-color)] md:px-8 md:py-0.5 md:text-xs">
                                             {product.stock > 0 ? `${product.stock} items in stock` : 'Out of Stock'}
                                         </p>
                                     </div>
 
-                                    <div className="cardActions">
+                                    <div className="mt-3 flex flex-col justify-center gap-2 md:mt-4 md:flex-row">
                                         <button
                                             type="button"
-                                            className="viewBtn"
+                                            className="cursor-pointer rounded-[10px] bg-[color:var(--tertiary-color)] px-4 py-2.5 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:bg-[color:var(--main-color)] hover:text-[color:var(--dark-color)]"
                                             onClick={() => navigate(`/products/${product._id}`)}
                                         >
                                             View Details
@@ -179,7 +211,7 @@ export default function Marketplace() {
                                         {(!canManage && user) && (
                                             <button
                                                 type="button"
-                                                className="addCartBtn"
+                                                className="cursor-pointer rounded-[10px] bg-[color:var(--light-color)] px-4 py-2.5 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--tertiary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:bg-[#ddd] disabled:opacity-60"
                                                 disabled={addingProductId === product._id || product.stock <= 0 || isInCart}
                                                 onClick={() => handleAddToCart(product._id)}
                                             >
@@ -187,7 +219,14 @@ export default function Marketplace() {
                                             </button>
                                         )}
 
-                                        {(canManage && user) && <Link to={`/products/edit/${product._id}`} className="editBtn">Edit Product</Link>}
+                                        {(canManage && user) && (
+                                            <Link
+                                                to={`/products/edit/${product._id}`}
+                                                className="flex cursor-pointer justify-center rounded-[10px] bg-[color:var(--light-color)] px-4 py-2.5 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out hover:bg-[color:var(--tertiary-color)] hover:text-[color:var(--light-color)]"
+                                            >
+                                                Edit Product
+                                            </Link>
+                                        )}
                                     </div>
                                 </div>
                             );

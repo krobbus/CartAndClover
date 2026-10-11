@@ -46,7 +46,7 @@ export default function ProductForm() {
 
     if (!canManage) {
         return (
-            <div className="productFormContainer">
+            <div className="flex min-h-[100dvh] flex-col justify-start gap-2 p-8 md:p-16">
                 <ErrorNote error="Unauthorized: Only sellers or admins can manage products." />
             </div>
         );
@@ -61,8 +61,6 @@ export default function ProductForm() {
             [name]: type === 'number' ? Number(value) : value,
         }));
     };
-
-    const placeholder = '/placeholder.png';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -91,42 +89,68 @@ export default function ProductForm() {
     };
 
     return (
-        <div className="productFormContainer">
-            <button type="button" className="backBtn" onClick={() => navigate(-1)}>
+        <div className="flex min-h-[100dvh] flex-col justify-start gap-2 p-8 md:p-16">
+            <button
+                type="button"
+                className="mb-6 flex cursor-pointer items-center justify-start gap-2 self-start bg-transparent font-[family-name:var(--body-font)] text-sm text-[color:var(--dark-color)] transition-colors duration-200 ease-in-out hover:text-[color:var(--secondary-color)] md:mb-8 md:text-base"
+                onClick={() => navigate(-1)}
+            >
                 <i className="fa-solid fa-chevron-left"></i> Back
             </button>
 
-            <form onSubmit={handleSubmit}>
-                <header className="span">
-                    <h2>{isEdit ? 'Edit Product' : 'Create New Product'}</h2>
-                    <p>
+            <form
+                onSubmit={handleSubmit}
+                className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:px-16"
+            >
+                <header className="col-span-full flex flex-col justify-start">
+                    <h2 className="font-[family-name:var(--heading-font)] text-2xl font-bold text-[color:var(--tertiary-color)] md:text-3xl">
+                        {isEdit ? 'Edit Product' : 'Create New Product'}
+                    </h2>
+                    <p className="font-[family-name:var(--body-font)] text-sm tracking-[1px] md:text-base">
                         {isEdit
                             ? 'Update the details, pricing, or inventory for this product listing.'
                             : 'Fill in the information below to publish a new item to the marketplace.'
                         }
                     </p>
                 </header>
-                
-                <div className="span">
+
+                <div className="col-span-full">
                     <ErrorNote error={error} />
                 </div>
-                
-                <div className="inputWrapper">
-                    <label htmlFor="name">Product Name <span className="requiredMarker">*</span></label>
+
+                <div className="flex min-w-0 flex-col gap-2">
+                    <label
+                        htmlFor="name"
+                        className="flex gap-1 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] md:text-base"
+                    >
+                        Product Name <span className="text-[#ff7171]">*</span>
+                    </label>
                     <input
                         id="name"
                         name="name"
                         type="text"
+                        className="w-full rounded-[10px] border-2 border-[color:var(--secondary-color)] bg-white px-4 py-3 font-[family-name:var(--body-font)] text-sm text-[color:var(--dark-color)] outline-none transition duration-200 ease-in-out focus:border-[color:var(--tertiary-color)] md:text-base"
                         value={formData.name}
                         onChange={handleChange}
                         required
                         placeholder="e.g. Leather Jacket"
-                    />    
+                    />
                 </div>
-                
-                <div className="inputWrapper">
-                    <label htmlFor="category">Category <span className="requiredMarker">*</span></label>
-                    <select id="category" name="category" value={formData.category} onChange={handleChange}>
+
+                <div className="flex min-w-0 flex-col gap-2">
+                    <label
+                        htmlFor="category"
+                        className="flex gap-1 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] md:text-base"
+                    >
+                        Category <span className="text-[#ff7171]">*</span>
+                    </label>
+                    <select
+                        id="category"
+                        name="category"
+                        className="w-full rounded-[10px] border-2 border-[color:var(--secondary-color)] bg-white px-4 py-3 font-[family-name:var(--body-font)] text-sm text-[color:var(--dark-color)] outline-none transition duration-200 ease-in-out focus:border-[color:var(--tertiary-color)] md:text-base"
+                        value={formData.category}
+                        onChange={handleChange}
+                    >
                         {categories.map((cat) => (
                             <option key={cat} value={cat}>
                                 {capitalizeWords(cat)}
@@ -134,56 +158,82 @@ export default function ProductForm() {
                         ))}
                     </select>
                 </div>
-                
-                <div className="inputWrapper">
-                    <label htmlFor="price">Price (PHP) <span className="requiredMarker">*</span></label>
+
+                <div className="flex min-w-0 flex-col gap-2">
+                    <label
+                        htmlFor="price"
+                        className="flex gap-1 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] md:text-base"
+                    >
+                        Price (PHP) <span className="text-[#ff7171]">*</span>
+                    </label>
                     <input
                         id="price"
-                        placeholder="0.00"
                         name="price"
                         type="number"
                         step="0.01"
                         min="0"
+                        className="w-full rounded-[10px] border-2 border-[color:var(--secondary-color)] bg-white px-4 py-3 font-[family-name:var(--body-font)] text-sm text-[color:var(--dark-color)] outline-none transition duration-200 ease-in-out focus:border-[color:var(--tertiary-color)] md:text-base"
+                        placeholder="0.00"
                         value={formData.price}
                         onChange={handleChange}
                         required
                     />
                 </div>
-                
-                <div className="inputWrapper">
-                    <label htmlFor="stockQuantity">Stock Quantity <span className="requiredMarker">*</span></label>
+
+                <div className="flex min-w-0 flex-col gap-2">
+                    <label
+                        htmlFor="stockQuantity"
+                        className="flex gap-1 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] md:text-base"
+                    >
+                        Stock Quantity <span className="text-[#ff7171]">*</span>
+                    </label>
                     <input
                         id="stockQuantity"
                         name="stock"
                         type="number"
                         min="0"
+                        className="w-full rounded-[10px] border-2 border-[color:var(--secondary-color)] bg-white px-4 py-3 font-[family-name:var(--body-font)] text-sm text-[color:var(--dark-color)] outline-none transition duration-200 ease-in-out focus:border-[color:var(--tertiary-color)] md:text-base"
                         value={formData.stock}
                         onChange={handleChange}
                         required
-                    />    
+                    />
                 </div>
-                
-                <div className="inputWrapper span">
-                    <label id="description">Description (Optional)</label>
+
+                <div className="col-span-full flex min-w-0 flex-col gap-2">
+                    <label
+                        htmlFor="description"
+                        className="flex gap-1 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] md:text-base"
+                    >
+                        Description (Optional)
+                    </label>
                     <textarea
                         id="description"
                         name="description"
                         rows="4"
+                        className="min-h-[100px] w-full resize-y rounded-[10px] border-2 border-[color:var(--secondary-color)] bg-white px-4 py-3 font-[family-name:var(--body-font)] text-sm leading-normal text-[color:var(--dark-color)] outline-none transition duration-200 ease-in-out focus:border-[color:var(--tertiary-color)] md:text-base"
                         value={formData.description}
                         onChange={handleChange}
                         placeholder="Provide details regarding the product..."
                     />
                 </div>
 
-                <div className="formActions span">
-                    <button type="submit" className="submitBtn" disabled={submitting}>
-                        {submitting ? <i className="fa-solid fa-floppy-disk"></i> : 
+                <div className="col-span-full mt-4 flex justify-center gap-4 md:justify-end">
+                    <button
+                        type="submit"
+                        className="flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-transparent bg-[color:var(--tertiary-color)] px-4 py-2.5 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--secondary-color)] disabled:cursor-not-allowed disabled:bg-[#ddd] disabled:opacity-60 md:py-3 md:text-base"
+                        disabled={submitting}
+                    >
+                        {submitting ? <i className="fa-solid fa-floppy-disk"></i> :
                             isEdit ? <i className="fa-solid fa-pen-to-square"></i> : <i className="fa-solid fa-square-plus"></i>
-                        } 
+                        }
                         {submitting ? 'Saving...' : isEdit ? 'Update Product' : 'Create Product'}
                     </button>
-                    
-                    <button type="button" className="cancelBtn" onClick={() => navigate(-1)}>
+
+                    <button
+                        type="button"
+                        className="flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[color:var(--tertiary-color)] bg-transparent px-4 py-2.5 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out hover:bg-[color:var(--tertiary-color)] hover:text-[color:var(--light-color)] md:py-3 md:text-base"
+                        onClick={() => navigate(-1)}
+                    >
                         <i className="fa-solid fa-xmark"></i> Cancel
                     </button>
                 </div>
