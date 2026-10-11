@@ -108,78 +108,94 @@ export default function ProductView() {
 
     if (!product && !error) {
         return (
-            <EmptyState
-                title="Product Not Found"
-                action={
-                    <button type="button" onClick={() => navigate('/products')}>
-                        Back to Products
-                    </button>
-                }
-            />
+            <div className="p-8 md:p-16">
+                <EmptyState
+                    title="Product Not Found"
+                    action={<Link to="/products">Back to Products</Link>}
+                />
+            </div>
         );
     }
 
     const calculatedPrice = ((product?.price || 0) * quantity).toFixed(2);
 
     return (
-        <div className="productViewContainer">
-            <button type="button" className="backBtn" onClick={() => navigate(-1)}>
+        <div className="flex min-h-[100dvh] flex-col justify-start gap-2 bg-[color:var(--tertiary-color)] p-8 md:p-16">
+            <button
+                type="button"
+                className="mb-6 flex cursor-pointer items-center justify-start gap-2 self-start bg-transparent font-[family-name:var(--body-font)] text-sm text-[color:var(--light-color)] transition-colors duration-200 ease-in-out hover:text-[color:var(--main-color)] md:mb-8 md:text-base"
+                onClick={() => navigate(-1)}
+            >
                 <i className="fa-solid fa-chevron-left"></i> Back
             </button>
 
-            <header>
-                <h1>{product.name}</h1>
+            <header className="flex items-end justify-between pb-8">
+                <h1 className="font-[family-name:var(--heading-font)] text-3xl font-bold text-[color:var(--light-color)] md:text-5xl">
+                    {product?.name}
+                </h1>
             </header>
 
             <ErrorNote error={error} onRetry={loadProduct} />
 
             {product && (
-                <div className="productDetailCard">
-                    <div className="productImageWrapper">
+                <div className="flex flex-col gap-4 md:grid md:grid-cols-3 md:gap-8">
+                    <div className="aspect-square w-full max-w-md self-center md:max-w-none md:self-auto">
                         <img
                             src={placeholderDisplay(product.category)}
                             alt={product.name}
-                            className="productDetailImage"
+                            className="h-full w-full rounded-[20px] object-cover"
                         />
                     </div>
 
-                    <div className="productDetailInfo">
-                        <p className="productDescription">{product.description || 'No description provided.'}</p>
+                    <div className="flex flex-col justify-evenly gap-4 md:col-span-2">
+                        <p className="font-[family-name:var(--body-font)] text-xl text-[color:var(--light-color)] md:text-3xl">
+                            {product.description || 'No description provided.'}
+                        </p>
 
                         <div>
-                            <div className="detailWrapper">
-                                <span className="priceHeading">Original Price</span>
-                                <span className="productPrice">PHP {product.price}</span>
+                            <div className="flex flex-col items-start justify-between border-b-4 border-[color:var(--main-color)] pb-1 pt-4 md:flex-row md:flex-wrap md:items-end md:pb-2 md:pt-8">
+                                <span className="font-[family-name:var(--body-font)] text-xs tracking-[1px] text-[color:var(--light-color)] md:pl-2 md:text-xl">
+                                    Original Price
+                                </span>
+                                <span className="font-[family-name:var(--body-font)] text-xl font-bold tracking-[1px] text-[color:var(--light-color)] [word-spacing:0.6rem] md:pr-2 md:text-2xl">
+                                    PHP {product.price}
+                                </span>
                             </div>
 
-                            <div className="detailWrapper">
-                                <span className="categoryHeading">Category</span>
-                                <span className="categoryBadge">{capitalizeWords(product.category || 'General')}</span>
+                            <div className="flex flex-col items-start justify-between border-b-4 border-[color:var(--main-color)] pb-1 pt-4 md:flex-row md:flex-wrap md:items-end md:pb-2 md:pt-8">
+                                <span className="font-[family-name:var(--body-font)] text-xs tracking-[1px] text-[color:var(--light-color)] md:pl-2 md:text-xl">
+                                    Category
+                                </span>
+                                <span className="font-[family-name:var(--body-font)] text-xl font-bold tracking-[1px] text-[color:var(--light-color)] [word-spacing:0.6rem] md:pr-2 md:text-2xl">
+                                    {capitalizeWords(product.category || 'General')}
+                                </span>
                             </div>
-                            
-                            <div className="detailWrapper">
-                                <span className="statusHeading">Stock</span>
-                                <p className="productStatus">
+
+                            <div className="flex flex-col items-start justify-between border-b-4 border-[color:var(--main-color)] pb-1 pt-4 md:flex-row md:flex-wrap md:items-end md:pb-2 md:pt-8">
+                                <span className="font-[family-name:var(--body-font)] text-xs tracking-[1px] text-[color:var(--light-color)] md:pl-2 md:text-xl">
+                                    Stock
+                                </span>
+                                <p className="font-[family-name:var(--body-font)] text-xl font-bold tracking-[1px] text-[color:var(--light-color)] [word-spacing:0.6rem] md:pr-2 md:text-2xl">
                                     {product.stock > 0 ? `(${product.stock}) items in stock` : 'Out of Stock'}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="productActionsContainer">
+                        <div className="flex flex-wrap items-center justify-start gap-4 py-4 md:justify-between">
                             {(!canManage && user) && (
                                 <>
-                                    <div className="productItemQuantity">
+                                    <div className="flex gap-2">
                                         <button
                                             type="button"
-                                            className="minusOne"
+                                            className="cursor-pointer rounded-[10px] bg-[color:var(--main-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold transition duration-200 ease-in-out hover:enabled:bg-[color:var(--secondary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:opacity-60 md:text-sm"
                                             disabled={quantity <= 1 || adding || buyingNow}
                                             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                                         >
                                             <i className="fa-solid fa-minus"></i>
                                         </button>
 
-                                        <input 
-                                            className="counter"
+                                        <input
+                                            className="w-24 min-w-0 rounded-[10px] border-2 border-[color:var(--main-color)] bg-[color:var(--light-color)] text-center font-[family-name:var(--body-font)] text-xs font-bold md:text-sm"
                                             value={quantity}
                                             onChange={(e) => {
                                                 const val = e.target.value;
@@ -198,7 +214,7 @@ export default function ProductView() {
 
                                         <button
                                             type="button"
-                                            className="plusOne"
+                                            className="cursor-pointer rounded-[10px] bg-[color:var(--main-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold transition duration-200 ease-in-out hover:enabled:bg-[color:var(--secondary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:opacity-60 md:text-sm"
                                             disabled={quantity >= product.stock || adding || buyingNow}
                                             onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
                                         >
@@ -206,25 +222,34 @@ export default function ProductView() {
                                         </button>
                                     </div>
 
-                                    <p className="calculatedPrice">PHP {calculatedPrice}</p>
+                                    <p className="font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--light-color)] md:text-base">
+                                        PHP {calculatedPrice}
+                                    </p>
                                 </>
                             )}
 
-                            <div className="productActions">
+                            <div className="flex flex-wrap gap-3 md:gap-4">
                                 {(canManage && user) ? (
                                     <>
-                                        <Link to={`/products/edit/${product._id}`} className="editBtn">
+                                        <Link
+                                            to={`/products/edit/${product._id}`}
+                                            className="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[color:var(--main-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:bg-[color:var(--secondary-color)] hover:text-[color:var(--light-color)] md:text-sm"
+                                        >
                                             <i className="fa-solid fa-pen-to-square"></i>Edit Product
                                         </Link>
-                                        
-                                        <button type="button" className="deleteBtn" onClick={handleDelete}>
+
+                                        <button
+                                            type="button"
+                                            className="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[rgb(200,100,100)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:bg-[rgb(180,80,80)] md:text-sm"
+                                            onClick={handleDelete}
+                                        >
                                             <i className="fa-solid fa-trash"></i>Delete Product
                                         </button>
                                     </>
                                 ) : (
                                     <button
                                         type="button"
-                                        className="addCartBtn"
+                                        className="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[color:var(--main-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--secondary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:bg-[#ddd] disabled:opacity-60 md:text-sm"
                                         onClick={handleAddToCart}
                                         disabled={adding || product.stock <= 0 || isInCart}
                                     >
@@ -241,7 +266,7 @@ export default function ProductView() {
                                 {(!canManage && user) && product.stock > 0 && (
                                     <button
                                         type="button"
-                                        className="buyNowBtn"
+                                        className="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[color:var(--light-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--secondary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:opacity-60 md:text-sm"
                                         onClick={handleBuyNow}
                                         disabled={adding || buyingNow}
                                     >
