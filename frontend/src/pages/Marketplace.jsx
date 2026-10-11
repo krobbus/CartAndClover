@@ -65,13 +65,22 @@ export default function Marketplace() {
 
     const productsList = Array.isArray(products) ? products : [];
 
-    const filteredProducts = productsList.filter((product) => {
-        const matchesSearch =
+    const searchMatches = productsList.filter((product) => {
+        return (
             product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.description?.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
-        return matchesSearch && matchesCategory;
+            product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
     });
+
+    const filteredProducts = searchMatches.filter((product) => {
+        return selectedCategory === 'All' || product.category === selectedCategory;
+    });
+
+    const categoryCount = (category) => {
+        return category === 'All'
+            ? searchMatches.length
+            : searchMatches.filter((product) => product.category === category).length;
+    };
 
     const handleAddToCart = async (productId) => {
         if (!user) {
@@ -99,21 +108,21 @@ export default function Marketplace() {
     return (
         <div className="h-auto w-full">
             <header
-                className="relative flex min-h-[100dvh] flex-col items-start justify-center gap-2 bg-cover bg-bottom bg-no-repeat px-4 py-16 sm:px-8"
+                className="relative flex min-h-[100dvh] flex-col items-start justify-center gap-3 bg-cover bg-bottom bg-no-repeat px-5 py-16 sm:px-10 md:px-16"
                 style={{
                     backgroundImage: `linear-gradient(to right, #000 20%, rgba(255, 255, 255, 0.1)), url(${headerBanner})`,
                 }}
             >
-                <h1 className="font-[family-name:var(--heading-font)] text-3xl font-bold text-[color:var(--main-color)] sm:text-5xl md:text-6xl">
+                <h1 className="max-w-3xl font-[family-name:var(--heading-font)] text-4xl font-bold leading-[1.05] text-[color:var(--main-color)] sm:text-6xl md:text-7xl">
                     Welcome to Cart & Clover
                 </h1>
-                <p className="max-w-[300px] pl-2 font-[family-name:var(--body-font)] text-sm tracking-[1px] text-[color:var(--light-color)] md:max-w-none md:text-base">
+                <p className="max-w-[320px] font-[family-name:var(--body-font)] text-sm leading-relaxed tracking-[0.5px] text-[color:var(--light-color)] sm:max-w-md md:text-base">
                     Discover everyday essentials and exclusive collections from all sellers.
                 </p>
 
                 <button
                     type="button"
-                    className="absolute bottom-[15%] left-[20%] right-[20%] cursor-pointer whitespace-nowrap rounded-[30px] border-[2.5px] border-[color:var(--main-color)] bg-transparent p-2.5 font-[family-name:var(--body-font)] text-sm text-[color:var(--main-color)] transition duration-200 ease-in-out drop-shadow-[0_0_10px_var(--main-color)] md:left-[35%] md:right-[35%] md:border-4 md:p-3 md:text-base md:drop-shadow-none md:hover:drop-shadow-[0_0_10px_var(--main-color)]"
+                    className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-full border-2 border-[color:var(--main-color)] bg-[color:var(--main-color)] px-6 py-3 font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:bg-transparent hover:text-[color:var(--main-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--main-color)] md:px-8 md:text-base"
                     onClick={scrollToCatalog}
                 >
                     Explore Catalog <i className="fa-solid fa-chevron-down"></i>
@@ -123,37 +132,62 @@ export default function Marketplace() {
             <ErrorNote error={error} onRetry={loadProducts} />
 
             <section
-                className="flex min-h-[100dvh] flex-col justify-start gap-2 p-8 md:p-16"
+                className="flex min-h-[100dvh] flex-col justify-start gap-6 p-5 sm:p-8 md:p-16"
                 ref={catalogRef}
             >
-                <h2 className="font-[family-name:var(--heading-font)] text-2xl font-bold text-[color:var(--tertiary-color)] md:text-3xl">
-                    Explore Marketplace
-                </h2>
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                    <h2 className="font-[family-name:var(--heading-font)] text-3xl font-bold text-[color:var(--tertiary-color)] md:text-4xl">
+                        Explore Marketplace
+                    </h2>
 
-                <div className="flex flex-col gap-4 md:gap-2">
-                    <input
-                        type="text"
-                        className="flex-1 rounded-[10px] border-2 border-[color:var(--secondary-color)] bg-white px-4 py-2.5 font-[family-name:var(--body-font)] text-sm md:px-8 md:py-3 md:text-base"
-                        placeholder="Search all products..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                    {!loading && (
+                        <p className="font-[family-name:var(--body-font)] text-xs text-[#555] md:text-sm">
+                            {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+                        </p>
+                    )}
+                </div>
 
-                    <div className="flex flex-wrap justify-center gap-2 md:justify-end">
-                        {categories.map((category) => (
-                            <button
-                                key={category}
-                                type="button"
-                                className={`cursor-pointer rounded-[10px] border-2 border-[color:var(--secondary-color)] px-3 py-1 font-[family-name:var(--body-font)] text-xs font-bold transition duration-200 ease-in-out hover:bg-[color:var(--secondary-color)] hover:text-[color:var(--light-color)] md:px-4 md:py-2 md:text-sm ${
-                                    selectedCategory === category
-                                        ? 'bg-[color:var(--secondary-color)] text-[color:var(--light-color)]'
-                                        : 'bg-transparent text-[color:var(--secondary-color)]'
-                                }`}
-                                onClick={() => setSelectedCategory(category)}
-                            >
-                                {capitalizeWords(category)}
-                            </button>
-                        ))}
+                <div className="flex flex-col gap-4">
+                    <div className="relative">
+                        <i className="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[color:var(--secondary-color)] md:left-5"></i>
+                        <input
+                            type="text"
+                            className="w-full rounded-full border-2 border-[color:var(--main-color)] bg-white py-2.5 pl-11 pr-4 font-[family-name:var(--body-font)] text-sm text-[color:var(--dark-color)] outline-none transition duration-200 ease-in-out placeholder:text-[#8a8a8a] focus:border-[color:var(--tertiary-color)] focus:ring-4 focus:ring-[rgba(164,223,204,0.5)] md:py-3 md:pl-12 md:pr-6 md:text-base"
+                            placeholder="Search all products..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:-mx-8 sm:px-8 md:mx-0 md:flex-wrap md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
+                        {categories.map((category) => {
+                            const isActive = selectedCategory === category;
+
+                            return (
+                                <button
+                                    key={category}
+                                    type="button"
+                                    aria-pressed={isActive}
+                                    className={`inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-full border-2 px-4 py-1.5 font-[family-name:var(--body-font)] text-xs font-bold transition duration-200 ease-in-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)] md:py-2 md:text-sm ${
+                                        isActive
+                                            ? 'border-[color:var(--tertiary-color)] bg-[color:var(--tertiary-color)] text-[color:var(--light-color)]'
+                                            : 'border-[color:var(--main-color)] bg-white text-[color:var(--tertiary-color)] hover:border-[color:var(--secondary-color)] hover:bg-[rgba(164,223,204,0.35)]'
+                                    }`}
+                                    onClick={() => setSelectedCategory(category)}
+                                >
+                                    {capitalizeWords(category)}
+                                    <span
+                                        className={`rounded-full px-1.5 text-[10px] font-bold leading-4 md:text-xs ${
+                                            isActive
+                                                ? 'bg-[rgba(255,255,255,0.25)] text-[color:var(--light-color)]'
+                                                : 'bg-[color:var(--light-color)] text-[color:var(--tertiary-color)]'
+                                        }`}
+                                    >
+                                        {categoryCount(category)}
+                                    </span>
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
@@ -165,44 +199,69 @@ export default function Marketplace() {
                         action={canManage && <Link to="/products/new">Add a Product</Link>}
                     />
                 ) : (
-                    <div className="my-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-[repeat(auto-fit,minmax(250px,300px))]">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] md:gap-6">
                         {filteredProducts.map((product) => {
                             const isInCart = cartProductIds.includes(product._id);
+                            const isSoldOut = !(product.stock > 0);
+                            const isLowStock = !isSoldOut && product.stock <= 5;
 
                             return (
-                                <div
+                                <article
                                     key={product._id}
-                                    className="min-w-0 rounded-[20px] bg-[color:var(--secondary-color)] p-3 md:p-4"
+                                    className="group flex min-w-0 flex-col overflow-hidden rounded-[20px] border border-[color:var(--main-color)] bg-white transition duration-200 ease-in-out hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(84,146,125,0.25)]"
                                 >
-                                    <div className="flex flex-wrap items-center justify-between gap-x-2 pb-3 md:pb-4">
-                                        <h3 className="font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] md:text-base">
-                                            {product.name}
-                                        </h3>
-                                        <p className="font-[family-name:var(--body-font)] text-xs text-[#444] md:text-base">
-                                            {capitalizeWords(product.category || 'General')}
-                                        </p>
-                                    </div>
-
-                                    <div className="relative aspect-square">
-                                        <p className="absolute right-0 top-0 rounded-bl-[20px] bg-[color:var(--secondary-color)] pb-2 pl-4 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] md:text-base">
-                                            PHP {product.price?.toFixed(2)}
-                                        </p>
-
+                                    <Link
+                                        to={`/products/${product._id}`}
+                                        tabIndex={-1}
+                                        aria-hidden="true"
+                                        className="relative block aspect-[4/3] overflow-hidden bg-[color:var(--main-color)]"
+                                    >
                                         <img
                                             src={placeholderDisplay(product.category)}
                                             alt={product.name}
-                                            className="h-full w-full rounded-[20px] object-cover"
+                                            className={`h-full w-full object-cover transition duration-300 ease-in-out group-hover:scale-105 ${
+                                                isSoldOut ? 'opacity-50 grayscale' : ''
+                                            }`}
                                         />
 
-                                        <p className="absolute inset-x-2.5 bottom-2.5 rounded-[20px] bg-[color:var(--secondary-color)] px-2 py-1 text-center font-[family-name:var(--body-font)] text-[10px] font-bold leading-tight text-[color:var(--light-color)] md:px-8 md:py-0.5 md:text-xs">
-                                            {product.stock > 0 ? `${product.stock} items in stock` : 'Out of Stock'}
-                                        </p>
+                                        <span className="absolute left-2.5 top-2.5 rounded-full bg-[rgba(255,255,255,0.92)] px-2.5 py-1 font-[family-name:var(--body-font)] text-[10px] font-bold leading-none text-[color:var(--tertiary-color)] md:text-xs">
+                                            {capitalizeWords(product.category || 'General')}
+                                        </span>
+                                    </Link>
+
+                                    <div className="flex flex-1 flex-col gap-1 p-3 md:gap-1.5 md:p-4">
+                                        <h3 className="line-clamp-2 font-[family-name:var(--heading-font)] text-lg font-bold leading-tight text-[color:var(--dark-color)] md:text-xl">
+                                            {product.name}
+                                        </h3>
+
+                                        {product.description && (
+                                            <p className="line-clamp-2 font-[family-name:var(--body-font)] text-xs leading-relaxed text-[#555] max-sm:hidden md:text-sm">
+                                                {product.description}
+                                            </p>
+                                        )}
+
+                                        <div className="mt-auto flex flex-wrap items-end justify-between gap-x-2 pt-2">
+                                            <p className="font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--tertiary-color)] md:text-lg">
+                                                PHP {product.price?.toFixed(2)}
+                                            </p>
+                                            <p
+                                                className={`font-[family-name:var(--body-font)] text-[11px] font-bold md:text-xs ${
+                                                    isSoldOut
+                                                        ? 'text-[#991b1b]'
+                                                        : isLowStock
+                                                            ? 'text-[#92400e]'
+                                                            : 'text-[#555]'
+                                                }`}
+                                            >
+                                                {isSoldOut ? 'Sold out' : isLowStock ? `Only ${product.stock} left` : `${product.stock} in stock`}
+                                            </p>
+                                        </div>
                                     </div>
 
-                                    <div className="mt-3 flex flex-col justify-center gap-2 md:mt-4 md:flex-row">
+                                    <div className="flex flex-col gap-2 px-3 pb-3 md:flex-row md:px-4 md:pb-4">
                                         <button
                                             type="button"
-                                            className="cursor-pointer rounded-[10px] bg-[color:var(--tertiary-color)] px-4 py-2.5 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:bg-[color:var(--main-color)] hover:text-[color:var(--dark-color)]"
+                                            className="flex-1 cursor-pointer rounded-[10px] border-2 border-[color:var(--tertiary-color)] bg-transparent px-3 py-2 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out hover:bg-[color:var(--tertiary-color)] hover:text-[color:var(--light-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)]"
                                             onClick={() => navigate(`/products/${product._id}`)}
                                         >
                                             View Details
@@ -211,24 +270,24 @@ export default function Marketplace() {
                                         {(!canManage && user) && (
                                             <button
                                                 type="button"
-                                                className="cursor-pointer rounded-[10px] bg-[color:var(--light-color)] px-4 py-2.5 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--tertiary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:bg-[#ddd] disabled:opacity-60"
+                                                className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 cursor-pointer rounded-[10px] border-2 border-[color:var(--tertiary-color)] bg-[color:var(--tertiary-color)] px-3 py-2 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:enabled:border-[color:var(--secondary-color)] hover:enabled:bg-[color:var(--secondary-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)] disabled:cursor-not-allowed disabled:border-[#ddd] disabled:bg-[#ddd] disabled:text-[#777]"
                                                 disabled={addingProductId === product._id || product.stock <= 0 || isInCart}
                                                 onClick={() => handleAddToCart(product._id)}
                                             >
-                                                {addingProductId === product._id ? 'Adding...' : isInCart ? 'In Cart' : 'Add to Cart'}
+                                                <i className="fa-solid fa-cart-shopping"></i> {addingProductId === product._id ? 'Adding...' : isInCart ? 'In Cart' : 'Add to Cart'}
                                             </button>
                                         )}
 
                                         {(canManage && user) && (
                                             <Link
                                                 to={`/products/edit/${product._id}`}
-                                                className="flex cursor-pointer justify-center rounded-[10px] bg-[color:var(--light-color)] px-4 py-2.5 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out hover:bg-[color:var(--tertiary-color)] hover:text-[color:var(--light-color)]"
+                                                className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] border-2 border-[color:var(--tertiary-color)] bg-[color:var(--tertiary-color)] px-3 py-2 text-center font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:border-[color:var(--secondary-color)] hover:bg-[color:var(--secondary-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)]"
                                             >
-                                                Edit Product
+                                               <i className="fa-solid fa-pen-to-square"></i> Edit
                                             </Link>
                                         )}
                                     </div>
-                                </div>
+                                </article>
                             );
                         })}
                     </div>
