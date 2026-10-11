@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --main-color: #a4dfcc;
   --secondary-color: #7db6a3;
@@ -8,12 +10,7 @@
   --body-font: 'Plus Jakarta Sans', Arial;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  scroll-padding-top: 4rem;
-}
+* { scroll-padding-top: 4rem; }
 
 body {
   height: 100dvh;
