@@ -33,14 +33,14 @@ export default function OrderItemsSummary({ items = [], totalAmount, title }) {
                         No items in this order.
                     </p>
                 ) : (
-                    <div className="flex min-w-0 items-center gap-4">
+                    <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
                         <div className="flex shrink-0 -space-x-3">
                             {thumbs.map((entry) => (
                                 <img
                                     key={entry.key}
                                     src={placeholderDisplay(entry.category)}
                                     alt={entry.name}
-                                    className="h-12 w-12 rounded-full border-2 border-[color:var(--main-color)] object-cover sm:h-14 sm:w-14"
+                                    className="h-12 w-12 rounded-full border-2 border-[color:var(--dark-color)] object-cover sm:h-14 sm:w-14"
                                 />
                             ))}
 
@@ -51,9 +51,9 @@ export default function OrderItemsSummary({ items = [], totalAmount, title }) {
                             )}
                         </div>
 
-                        <div className="flex min-w-0 flex-col gap-0.5">
-                            <p className="font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] tracking-wider md:text-base">
-                                {entries.length} {entries.length === 1 ? 'product' : 'products'} ({totalPieces} {totalPieces === 1 ? 'piece' : 'pieces'})
+                        <div className="flex w-full min-w-0 flex-col gap-0.5 sm:w-auto">
+                            <p className="font-[family-name:var(--body-font)] text-sm font-bold text-[color:var(--dark-color)] md:text-base">
+                                {entries.length} {entries.length === 1 ? 'product' : 'products'} • {totalPieces} {totalPieces === 1 ? 'piece' : 'pieces'}
                             </p>
                             <p className="truncate font-[family-name:var(--body-font)] text-xs text-[#333] md:text-sm">
                                 {previewNames}{previewMore}
