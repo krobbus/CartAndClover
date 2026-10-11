@@ -1,7 +1,7 @@
 {
   "name": "cartandclover",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Full-stack MERN (MongoDB, Express.js, React, Node.js) e-commerce application featuring responsive Tailwind CSS styling, strict Role-Based Access Control (RBAC), and secure order/inventory workflows",
   "main": "index.js",
   "scripts": {
     "frontend": "cd frontend && npm run dev",
