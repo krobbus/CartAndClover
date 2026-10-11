@@ -9,7 +9,7 @@ import { capitalizeWords, placeholderDisplay } from '../../utils.js';
 
 export default function ProductView() {
     const { productId } = useParams();
-    const { user, canManage } = useAuth();
+    const { user, canManage, isAdmin } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -116,6 +116,16 @@ export default function ProductView() {
             </div>
         );
     }
+
+    const currentUserId = user?._id || user?.id;
+    const sellerId =
+        product?.sellerId ||
+        product?.userId ||
+        product?.seller?._id ||
+        product?.seller ||
+        product?.createdBy;
+    const isOwner = String(sellerId) === String(currentUserId);
+    const canModify = user && (isAdmin || isOwner);
 
     const calculatedPrice = ((product?.price || 0) * quantity).toFixed(2);
 
@@ -229,7 +239,7 @@ export default function ProductView() {
                             )}
 
                             <div className="flex flex-wrap gap-3 md:gap-4">
-                                {(canManage && user) ? (
+                                {canModify ? (
                                     <>
                                         <Link
                                             to={`/products/edit/${product._id}`}
@@ -246,34 +256,36 @@ export default function ProductView() {
                                             <i className="fa-solid fa-trash"></i>Delete Product
                                         </button>
                                     </>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        className="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[color:var(--main-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--secondary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:bg-[#ddd] disabled:opacity-60 md:text-sm"
-                                        onClick={handleAddToCart}
-                                        disabled={adding || product.stock <= 0 || isInCart}
-                                    >
-                                        <i className="fa-solid fa-cart-shopping"></i>
-                                        {!user ?
-                                            'Login to Purchase' : adding ?
-                                            'Adding...' : isInCart ?
-                                            'In Cart' : product.stock <= 0 ?
-                                            'Out of Stock' : 'Add to Cart'
-                                        }
-                                    </button>
-                                )}
+                                ) : !canManage ? (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[color:var(--main-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--secondary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:bg-[#ddd] disabled:opacity-60 md:text-sm"
+                                            onClick={handleAddToCart}
+                                            disabled={adding || product.stock <= 0 || isInCart}
+                                        >
+                                            <i className="fa-solid fa-cart-shopping"></i>
+                                            {!user ?
+                                                'Login to Purchase' : adding ?
+                                                'Adding...' : isInCart ?
+                                                'In Cart' : product.stock <= 0 ?
+                                                'Out of Stock' : 'Add to Cart'
+                                            }
+                                        </button>
 
-                                {(!canManage && user) && product.stock > 0 && (
-                                    <button
-                                        type="button"
-                                        className="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[color:var(--light-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--secondary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:opacity-60 md:text-sm"
-                                        onClick={handleBuyNow}
-                                        disabled={adding || buyingNow}
-                                    >
-                                        <i className="fa-solid fa-store"></i>
-                                        {buyingNow ? 'Redirecting...' : 'Buy Now'}
-                                    </button>
-                                )}
+                                        {user && product.stock > 0 && (
+                                            <button
+                                                type="button"
+                                                className="flex cursor-pointer items-center gap-2 rounded-[10px] bg-[color:var(--light-color)] px-4 py-3 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:enabled:bg-[color:var(--secondary-color)] hover:enabled:text-[color:var(--light-color)] disabled:cursor-not-allowed disabled:opacity-60 md:text-sm"
+                                                onClick={handleBuyNow}
+                                                disabled={adding || buyingNow}
+                                            >
+                                                <i className="fa-solid fa-store"></i>
+                                                {buyingNow ? 'Redirecting...' : 'Buy Now'}
+                                            </button>
+                                        )}
+                                    </>
+                                ) : null }
                             </div>
                         </div>
                     </div>
