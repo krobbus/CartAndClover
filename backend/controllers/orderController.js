@@ -10,7 +10,7 @@ export const getUserOrders = asyncHandler(async (req, res) => {
 });
 
 export const getSellerOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await Order.find().populate('orderItems.product').sort({ createdAt: -1 });
     res.status(200).json(orders);
 });
 
