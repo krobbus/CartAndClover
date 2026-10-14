@@ -23,6 +23,43 @@ export default function Orders() {
     const status = ['All', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancel'];
     const payment = ['All', 'Paid', 'Unpaid'];
 
+    const [deletingId, setDeletingId] = useState(null);
+
+    const isOrderOwner = (order) => {
+        const shopperId =
+            order.user?._id ||
+            order.user ||
+            order.userId ||
+            order.shopperId ||
+            order.createdBy;
+
+        return Boolean(currentUserId) && String(shopperId) === String(currentUserId);
+    };
+
+    const canDeleteOrder = (order) => {
+        const orderStatus = (order.status || 'pending').toLowerCase();
+        const isPaid = order.isPaid === true;
+        const isCancelled = orderStatus === 'cancelled' || orderStatus === 'canceled';
+
+        return isOrderOwner(order) && ((orderStatus === 'delivered' && isPaid) || (isCancelled && !isPaid));
+    };
+
+    const handleDelete = async (order) => {
+        const orderId = order._id || order.id;
+        if (!window.confirm(`Delete order #${String(orderId)}? This cannot be undone.`)) return;
+
+        setDeletingId(orderId);
+        setError(null);
+        try {
+            await api.delete(`/orders/${orderId}`);
+            setOrders((prev) => prev.filter((o) => (o._id || o.id) !== orderId));
+        } catch (err) {
+            setError(err?.message || 'Failed to delete order.');
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
     const loadOrders = useCallback(async () => {
         if (!user) {
             return navigate('/login', { state: { from: location } });
@@ -66,14 +103,7 @@ export default function Orders() {
             return hasSellerItem || String(orderSellerId) === String(currentUserId);
         }
 
-        const shopperId =
-            order.user?._id ||
-            order.user ||
-            order.userId ||
-            order.shopperId ||
-            order.createdBy;
-
-        return String(shopperId) === String(currentUserId);
+        return isOrderOwner(order);
     });
 
     const filteredOrders = myOrders.filter((order) => {
@@ -254,13 +284,26 @@ export default function Orders() {
                                                 </td>
 
                                                 <td className="whitespace-nowrap px-3 py-4 lg:px-5 text-right align-middle">
-                                                    <button
-                                                        type="button"
-                                                        className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-[color:var(--tertiary-color)] bg-transparent px-3 py-1.5 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out lg:px-4 hover:bg-[color:var(--tertiary-color)] hover:text-[color:var(--light-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)]"
-                                                        onClick={() => navigate(`/products/orders/${orderId}`)}
-                                                    >
-                                                        View Details
-                                                    </button>
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <button
+                                                            type="button"
+                                                            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-[color:var(--tertiary-color)] bg-transparent px-3 py-1.5 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--tertiary-color)] transition duration-200 ease-in-out lg:px-4 hover:bg-[color:var(--tertiary-color)] hover:text-[color:var(--light-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)]"
+                                                            onClick={() => navigate(`/products/orders/${orderId}`)}
+                                                        >
+                                                            View Details
+                                                        </button>
+
+                                                        {canDeleteOrder(order) && (
+                                                            <button
+                                                                type="button"
+                                                                className="inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 border-[#991b1b] bg-transparent px-3 py-1.5 font-[family-name:var(--body-font)] text-xs font-bold text-[#991b1b] transition duration-200 ease-in-out lg:px-4 hover:enabled:bg-[#991b1b] hover:enabled:text-white disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#991b1b]"
+                                                                disabled={deletingId === orderId}
+                                                                onClick={() => handleDelete(order)}
+                                                            >
+                                                                {deletingId === orderId ? 'Deleting...' : 'Delete'}
+                                                            </button>
+                                                        )}
+                                                    </div>
                                                 </td>
                                             </tr>
                                         );
@@ -317,13 +360,26 @@ export default function Orders() {
                                         </span>
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        className="w-full cursor-pointer rounded-[10px] border-2 border-[color:var(--tertiary-color)] bg-[color:var(--tertiary-color)] px-4 py-2.5 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:border-[color:var(--secondary-color)] hover:bg-[color:var(--secondary-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)]"
-                                        onClick={() => navigate(`/products/orders/${orderId}`)}
-                                    >
-                                        View Details
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            type="button"
+                                            className="min-w-0 flex-1 cursor-pointer rounded-[10px] border-2 border-[color:var(--tertiary-color)] bg-[color:var(--tertiary-color)] px-4 py-2.5 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--light-color)] transition duration-200 ease-in-out hover:border-[color:var(--secondary-color)] hover:bg-[color:var(--secondary-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--tertiary-color)]"
+                                            onClick={() => navigate(`/products/orders/${orderId}`)}
+                                        >
+                                            View Details
+                                        </button>
+
+                                        {canDeleteOrder(order) && (
+                                            <button
+                                                type="button"
+                                                className="min-w-0 flex-1 cursor-pointer rounded-[10px] border-2 border-[#991b1b] bg-transparent px-4 py-2.5 font-[family-name:var(--body-font)] text-xs font-bold text-[#991b1b] transition duration-200 ease-in-out hover:enabled:bg-[#991b1b] hover:enabled:text-white disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#991b1b]"
+                                                disabled={deletingId === orderId}
+                                                onClick={() => handleDelete(order)}
+                                            >
+                                                {deletingId === orderId ? 'Deleting...' : 'Delete'}
+                                            </button>
+                                        )}
+                                    </div>
                                 </li>
                             );
                         })}
