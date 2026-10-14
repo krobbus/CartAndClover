@@ -17,24 +17,6 @@ import OrderView from './pages/order/OrderView';
 import OrderForm from './pages/order/OrderForm';
 
 import './App.css';
-//import './styles/auth.css';
-//import './styles/marketplace.css';
-//import './styles/addToCart.css';
-//import './styles/users.css';
-
-//import './styles/components/loading.css';
-//import './styles/components/navigation.css';
-//import './styles/components/emptyState.css';
-//import './styles/components/errorNote.css';
-//import './styles/components/notFound.css';
-
-//import './styles/product/products.css';
-//import './styles/product/productView.css';
-//import './styles/product/productForm.css';
-
-//import './styles/order/orders.css';
-//import './styles/order/orderView.css';
-//import './styles/order/orderForm.css';
 
 export default function App() {
     return (

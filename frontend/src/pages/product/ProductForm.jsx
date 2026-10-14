@@ -89,10 +89,10 @@ export default function ProductForm() {
     };
 
     return (
-        <div className="flex min-h-[100dvh] flex-col justify-start gap-2 p-8 md:p-16">
+        <div className="flex min-h-[100dvh] flex-col justify-start gap-6 p-8 md:p-16">
             <button
                 type="button"
-                className="mb-6 flex cursor-pointer items-center justify-start gap-2 self-start bg-transparent font-[family-name:var(--body-font)] text-sm text-[color:var(--dark-color)] transition-colors duration-200 ease-in-out hover:text-[color:var(--secondary-color)] md:mb-8 md:text-base"
+                className="inline-flex cursor-pointer items-center gap-2 self-start rounded-full bg-[rgba(0,0,0,0.12)] px-4 py-2 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:bg-[rgba(0,0,0,0.22)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--main-color)] md:text-sm"
                 onClick={() => navigate(-1)}
             >
                 <i className="fa-solid fa-chevron-left"></i> Back
@@ -100,7 +100,7 @@ export default function ProductForm() {
 
             <form
                 onSubmit={handleSubmit}
-                className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:px-16"
+                className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
             >
                 <header className="col-span-full flex flex-col justify-start">
                     <h2 className="font-[family-name:var(--heading-font)] text-2xl font-bold text-[color:var(--tertiary-color)] md:text-3xl">
