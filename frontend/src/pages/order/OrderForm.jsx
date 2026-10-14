@@ -125,10 +125,10 @@ export default function OrderForm() {
     if (loading) return <Loading label={isEditing ? "Loading order details..." : "Preparing checkout..."} />;
 
     return (
-        <div className="flex min-h-[100dvh] flex-col justify-start gap-2 p-8 md:p-16">
+        <div className="flex min-h-[100dvh] flex-col justify-start gap-6 p-8 md:p-16">
             <button
                 type="button"
-                className="mb-6 flex cursor-pointer items-center justify-start gap-2 self-start bg-transparent font-[family-name:var(--body-font)] text-sm text-[color:var(--dark-color)] transition-colors duration-200 ease-in-out hover:text-[color:var(--secondary-color)] md:mb-8 md:text-base"
+                className="inline-flex cursor-pointer items-center gap-2 self-start rounded-full bg-[rgba(0,0,0,0.12)] px-4 py-2 font-[family-name:var(--body-font)] text-xs font-bold text-[color:var(--dark-color)] transition duration-200 ease-in-out hover:bg-[rgba(0,0,0,0.22)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--main-color)] md:text-sm"
                 onClick={() => navigate(-1)}
             >
                 <i className="fa-solid fa-chevron-left"></i> Back
