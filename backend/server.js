@@ -16,9 +16,11 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = (process.env.CLIENT_URL || '').split(',').filter(Boolean);
+app.use(cors({ origin: allowedOrigins.length ? allowedOrigins : true }));
 app.use(express.json());
 
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
